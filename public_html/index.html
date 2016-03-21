@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instant LaTeX - Online LaTeX math formula editor</title>
+    <meta name="description" content="Free online LaTeX math editor with WYSIWYG functionality.">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <style>
+        #math-output-container {
+            padding: 10px;
+            border: 1px solid #ccc;
+            line-height: 1.5em;
+            border-radius: 3px;
+        }
+        #MathOutput {
+            padding: 15px 0 15px;
+            margin: 10px 0 10px;
+        }
+    </style>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+    <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <h2 class="text-center">Instant LaTeX</h2>
+
+        <p class="text-center">Input LaTeX and TeX and get instant mathematics.</p>
+
+        <hr>
+
+        <div class="hidden-xs col-md-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation">
+                    <a href="#math" aria-controls="math" role="tab" data-toggle="tab" class="math-tab">Math</a>
+                </li>
+                <li role="presentation">
+                    <a href="#symbols" aria-controls="symbols" role="tab" data-toggle="tab" class="math-tab">Symbols</a>
+                </li>
+                <li role="presentation">
+                    <a href="#greek" aria-controls="greek" role="tab" data-toggle="tab" class="math-tab">Greek</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <table role="tabpanel" class="table tab-pane active" id="math">
+                    <tbody>
+                    <tr>
+                        <td><a href="#" data-math="\times" title="\times" class="pre-made">$\times$</a></td>
+                        <td><a href="#" data-math="\div" title="\div" class="pre-made">$\div$</a></td>
+                        <td><a href="#" data-math="\pm" title="\pm" class="pre-made">$\pm$</a></td>
+                        <td><a href="#" data-math="\mp" title="\mp" class="pre-made">$\mp$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\ln x" title="\ln x" class="pre-made">$\ln x$</a></td>
+                        <td><a href="#" data-math="\sin x" title="\sin x" class="pre-made">$\sin x$</a></td>
+                        <td><a href="#" data-math="\cos x" title="\cos x" class="pre-made">$\cos x$</a></td>
+                        <td><a href="#" data-math="\tan x" title="\tan x" class="pre-made">$\tan x$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="a^b" title="a^b" class="pre-made">$a^b$</a></td>
+                        <td><a href="#" data-math="\sqrt[b]{a}" title="\sqrt[b]{a}" class="pre-made">$\sqrt[b]{a}$</a></td>
+                        <td><a href="#" data-math="\log_a b" title="\log_a b" class="pre-made">$\log_a b$</a></td>
+                        <td><a href="#" data-math="\log ab" title="\log ab" class="pre-made">$\log ab$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\frac{ab}{cd}" title="\frac{ab}{cd}" class="pre-made">$\frac{ab}{cd}$</a></td>
+                        <td><a href="#" data-math="\frac{\text{d}x}{\text{d}y}" title="\frac{\text{d}x}{\text{d}y}" class="pre-made">$\frac{\text{d}x}{\text{d}y}$</a></td>
+                        <td><a href="#" data-math="\frac{\partial a}{\partial b}" title="\frac{\partial a}{\partial b}" class="pre-made">$\frac{\partial a}{\partial b}$</a></td>
+                        <td><a href="#" data-math="\lim_{a \rightarrow b}" title="\lim_{a \rightarrow b}" class="pre-made">$\lim_{a \rightarrow b}$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\int_a^b" title="\int_a^b" class="pre-made">$\int_a^b$</a></td>
+                        <td><a href="#" data-math="\oint_a^b" title="\oint_a^b" class="pre-made">$\oint_a^b$</a></td>
+                        <td><a href="#" data-math="\prod_{i=0}^n" title="\prod_{i=0}^n" class="pre-made">$\prod_{i=0}^n$</a></td>
+                        <td><a href="#" data-math="\coprod_{i=0}^n" title="\coprod_{i=0}^n" class="pre-made">$\coprod_{i=0}^n$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\sum_{i=0}^n" title="\sum_{i=0}^n" class="pre-made">$\sum_{i=0}^n$</a></td>
+                        <td><a href="#" data-math="\bigcap_a^b" title="\bigcap_a^b" class="pre-made">$\bigcap_a^b$</a></td>
+                        <td><a href="#" data-math="\bigcup_a^b" title="\bigcup_a^b" class="pre-made">$\bigcup_a^b$</a></td>
+                        <td><a href="#" data-math="\bigsqcup_a^b" title="\bigsqcup_a^b" class="pre-made">$\bigsqcup_a^b$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\bigvee_a^b" title="\bigvee_a^b" class="pre-made">$\bigvee_a^b$</a></td>
+                        <td><a href="#" data-math="\bigwedge_a^b" title="\bigwedge_a^b" class="pre-made">$\bigwedge_a^b$</a></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table role="tabpanel" class="table tab-pane" id="symbols">
+                    <tbody>
+                    <tr>
+                        <td><a href="#" data-math="\ne" title="\ne" class="pre-made">$\ne$</a></td>
+                        <td><a href="#" data-math="\equiv" title="\equiv" class="pre-made">$\equiv$</a></td>
+                        <td><a href="#" data-math="\le" title="\le" class="pre-made">$\le$</a></td>
+                        <td><a href="#" data-math="\ge" title="\ge" class="pre-made">$\ge$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\propto" title="\propto" class="pre-made">$\propto$</a></td>
+                        <td><a href="#" data-math="\sim" title="\sim" class="pre-made">$\sim$</a></td>
+                        <td><a href="#" data-math="\approx" title="\approx" class="pre-made">$\approx$</a></td>
+                        <td><a href="#" data-math="\cong" title="\cong" class="pre-made">$\cong$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\in" title="\in" class="pre-made">$\in$</a></td>
+                        <td><a href="#" data-math="\subset" title="\subset" class="pre-made">$\subset$</a></td>
+                        <td><a href="#" data-math="\subseteq" title="\subseteq" class="pre-made">$\subseteq$</a></td>
+                        <td><a href="#" data-math="\ni" title="\ni" class="pre-made">$\ni$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\leftarrow" title="\leftarrow" class="pre-made">$\leftarrow$</a></td>
+                        <td><a href="#" data-math="\rightarrow" title="\rightarrow" class="pre-made">$\rightarrow$</a></td>
+                        <td><a href="#" data-math="\Leftarrow" title="\Leftarrow" class="pre-made">$\Leftarrow$</a></td>
+                        <td><a href="#" data-math="\Rightarrow" title="\Rightarrow" class="pre-made">$\Rightarrow$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\leftrightarrow" title="\leftrightarrow" class="pre-made">$\leftrightarrow$</a></td>
+                        <td><a href="#" data-math="\Leftrightarrow" title="\Leftrightarrow" class="pre-made">$\Leftrightarrow$</a></td>
+                        <td><a href="#" data-math="\mapsto" title="\mapsto" class="pre-made">$\mapsto$</a></td>
+                        <td><a href="#" data-math="\uparrow" title="\uparrow" class="pre-made">$\uparrow$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\Uparrow" title="\Uparrow" class="pre-made">$\Uparrow$</a></td>
+                        <td><a href="#" data-math="\downarrow" title="\downarrow" class="pre-made">$\downarrow$</a></td>
+                        <td><a href="#" data-math="\Downarrow" title="\Downarrow" class="pre-made">$\Downarrow$</a></td>
+                        <td><a href="#" data-math="\updownarrow" title="\updownarrow" class="pre-made">$\updownarrow$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\Updownarrow" title="\Updownarrow" class="pre-made">$\Updownarrow$</a></td>
+                        <td><a href="#" data-math="\nLeftarrow" title="\nLeftarrow" class="pre-made">$\nLeftarrow$</a></td>
+                        <td><a href="#" data-math="\nRightarrow" title="\nRightarrow" class="pre-made">$\nRightarrow$</a></td>
+                        <td><a href="#" data-math="\nleftrightarrow" title="\nleftrightarrow" class="pre-made">$\nleftrightarrow$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\nLeftrightarrow" title="\nLeftrightarrow" class="pre-made">$\nLeftrightarrow$</a></td>
+                        <td><a href="#" data-math="\cdot" title="\cdot" class="pre-made">$\cdot$</a></td>
+                        <td><a href="#" data-math="\star" title="\star" class="pre-made">$\star$</a></td>
+                        <td><a href="#" data-math="\therefore" title="\therefore" class="pre-made">$\therefore$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\forall" title="\forall" class="pre-made">$\forall$</a></td>
+                        <td><a href="#" data-math="\exists" title="\exists" class="pre-made">$\exists$</a></td>
+                        <td><a href="#" data-math="\surd" title="\surd" class="pre-made">$\surd$</a></td>
+                        <td><a href="#" data-math="\checkmark" title="\checkmark" class="pre-made">$\checkmark$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\bot" title="\bot" class="pre-made">$\bot$</a></td>
+                        <td><a href="#" data-math="\nexists" title="\nexists" class="pre-made">$\nexists$</a></td>
+                        <td><a href="#" data-math="\infty" title="\infty" class="pre-made">$\infty$</a></td>
+                        <td><a href="#" data-math="\partial" title="\partial" class="pre-made">$\partial$</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table role="tabpanel" class="table tab-pane" id="greek">
+                    <tbody>
+                    <tr>
+                        <td><a href="#" data-math="\alpha" title="\alpha" class="pre-made">$\alpha$</a></td>
+                        <td><a href="#" data-math="\beta" title="\beta" class="pre-made">$\beta$</a></td>
+                        <td><a href="#" data-math="\gamma" title="\gamma" class="pre-made">$\gamma$</a></td>
+                        <td><a href="#" data-math="\delta" title="\delta" class="pre-made">$\delta$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\epsilon" title="\epsilon" class="pre-made">$\epsilon$</a></td>
+                        <td><a href="#" data-math="\zeta" title="\zeta" class="pre-made">$\zeta$</a></td>
+                        <td><a href="#" data-math="\eta" title="\eta" class="pre-made">$\eta$</a></td>
+                        <td><a href="#" data-math="\theta" title="\theta" class="pre-made">$\theta$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\iota" title="\iota" class="pre-made">$\iota$</a></td>
+                        <td><a href="#" data-math="\kappa" title="\kappa" class="pre-made">$\kappa$</a></td>
+                        <td><a href="#" data-math="\lambda" title="\lambda" class="pre-made">$\lambda$</a></td>
+                        <td><a href="#" data-math="\mu" title="\mu" class="pre-made">$\mu$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\nu" title="\nu" class="pre-made">$\nu$</a></td>
+                        <td><a href="#" data-math="\xi" title="\xi" class="pre-made">$\xi$</a></td>
+                        <td><a href="#" data-math="\omicron" title="\omicron" class="pre-made">$\omicron$</a></td>
+                        <td><a href="#" data-math="\pi" title="\pi" class="pre-made">$\pi$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\rho" title="\rho" class="pre-made">$\rho$</a></td>
+                        <td><a href="#" data-math="\sigma" title="\sigma" class="pre-made">$\sigma$</a></td>
+                        <td><a href="#" data-math="\tau" title="\tau" class="pre-made">$\tau$</a></td>
+                        <td><a href="#" data-math="\upsilon" title="\upsilon" class="pre-made">$\upsilon$</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" data-math="\phi" title="\phi" class="pre-made">$\phi$</a></td>
+                        <td><a href="#" data-math="\chi" title="\chi" class="pre-made">$\chi$</a></td>
+                        <td><a href="#" data-math="\psi" title="\psi" class="pre-made">$\psi$</a></td>
+                        <td><a href="#" data-math="\omega" title="\omega" class="pre-made">$\omega$</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-8">
+            <div class="form-group">
+                <textarea class="form-control" id="maths-editor" rows="10">\frac{-b\pm\sqrt{b^2-4ac}}{2a}</textarea>
+            </div>
+
+            <div id="math-output-container" class="text-center">
+                <p class="text-center"><a id="save-page" href="#">Save page</a></p>
+
+                <div id="MathOutput">
+                    <p></p>
+                </div>
+
+                <div class="text-center">
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- Instant Latex Below -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1951638101090762"
+                         data-ad-slot="9262527731"
+                         data-ad-format="auto"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div>
+        <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/latest/js/bootstrap.min.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-54119971-32', 'auto');
+            ga('send', 'pageview');
+
+            (function (m, w) {
+                var queue = m.Hub.queue;
+                var math = null;
+
+                queue.Push(function () {
+                    math = m.Hub.getAllJax("MathOutput")[0];
+                });
+
+                w.UpdateMath = function (TeX) {
+                    arg = (TeX && TeX != "\\") ? "\\displaystyle{" + TeX + "}" : "";
+                    queue.Push(["Text", math, arg]);
+                }
+            })(MathJax, window);
+
+            $maths = $("#maths-editor");
+
+            $maths.on("change keyup paste mouseup", function () {
+                UpdateMath($(this).val());
+            });
+
+            if (parent.location.hash) {
+                $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
+            }
+
+            $("#MathOutput p").html("$${" + $maths.val() + "}$$");
+
+            $(".pre-made").click(function (e) {
+                e.preventDefault();
+                $str = $(this).data("math");
+                $maths.val($maths.val() + $str);
+                UpdateMath($maths.val());
+            });
+
+            $(".math-tab:first").tab("show");
+
+            $(".math-tab").click(function (e) {
+                e.preventDefault();
+                $(this).tab("show");
+            })
+
+            $("#save-page").click(function (e) {
+                e.preventDefault();
+                parent.location.hash = encodeURIComponent($maths.val());
+            });
+
+            $ins = $("ins");
+
+            $(window).load(function (e) {
+                $ins.children().length || $ins.parent().append('<a rel="nofollow" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8ARJRBU76PDUW">Donate</a>');
+            });
+        </script>
+    </div>
+</body>
+</html>
