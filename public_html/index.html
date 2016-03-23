@@ -12,7 +12,7 @@
             line-height: 1.5em;
             border-radius: 3px;
         }
-        #MathOutput {
+        #math-output {
             padding: 15px 0 15px;
             margin: 10px 0 10px;
         }
@@ -208,7 +208,7 @@
             <div id="math-output-container" class="text-center">
                 <p class="text-center"><a id="save-page" href="#">Save page</a></p>
 
-                <div id="MathOutput">
+                <div id="math-output">
                     <p></p>
                 </div>
 
@@ -246,7 +246,7 @@
                 var math = null;
 
                 queue.Push(function () {
-                    math = m.Hub.getAllJax("MathOutput")[0];
+                    math = m.Hub.getAllJax("math-output")[0];
                 });
 
                 w.UpdateMath = function (TeX) {
@@ -265,7 +265,7 @@
                 $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
             }
 
-            $("#MathOutput p").html("$${" + $maths.val() + "}$$");
+            $("#math-output p").html("$${" + $maths.val() + "}$$");
 
             $(".pre-made").click(function (e) {
                 e.preventDefault();
