@@ -1,0 +1,5 @@
+[Sat Mar 19 18:30:11.249840 2016] [:error] [pid 5644:tid 924] [client 127.0.0.1:55618] script 'C:/Apache24/htdocs/instantlatex.com/public_html/default.php' not found or unable to stat
+[Sat Mar 19 18:30:12.594459 2016] [:error] [pid 5644:tid 924] [client 127.0.0.1:55618] script 'C:/Apache24/htdocs/instantlatex.com/public_html/default.php' not found or unable to stat
+[Sat Mar 19 18:30:13.143866 2016] [:error] [pid 5644:tid 924] [client 127.0.0.1:55618] script 'C:/Apache24/htdocs/instantlatex.com/public_html/default.php' not found or unable to stat
+[Sat Mar 19 18:30:13.300271 2016] [:error] [pid 5644:tid 924] [client 127.0.0.1:55618] script 'C:/Apache24/htdocs/instantlatex.com/public_html/default.php' not found or unable to stat
+[Sat Mar 19 18:30:13.473678 2016] [:error] [pid 5644:tid 924] [client 127.0.0.1:55618] script 'C:/Apache24/htdocs/instantlatex.com/public_html/default.php' not found or unable to stat
