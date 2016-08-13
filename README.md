@@ -12,6 +12,6 @@ Other great LaTeX tools:
 - texpaste.com (free)
 - sharelatex.com (freemium)
 
-Copyright Jonathan Baldie 2016.
+(c) 2016 Jonathan Baldie.
 
 Thanks to MathJax for their excellent TeX rendering.
