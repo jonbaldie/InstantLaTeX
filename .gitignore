@@ -7,5 +7,3 @@ logs.worktrees/
 .dolt/
 *.db
 .beads-credential-key
-# bd worktree
-.worktrees/test-setup/
