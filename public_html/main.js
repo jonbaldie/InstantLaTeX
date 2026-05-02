@@ -10,19 +10,28 @@ if (typeof window !== 'undefined') {
     ga('create', 'UA-54119971-32', 'auto');
     ga('send', 'pageview');
 
-    (function (m, w) {
-        var queue = m.Hub.queue;
-        var math = null;
-
-        queue.Push(function () {
-            math = m.Hub.getAllJax("math-output")[0];
-        });
+    (function (w) {
+        var promise = Promise.resolve();
 
         w.UpdateMath = function (TeX) {
             var arg = formatMath(TeX);
-            queue.Push(["Text", math, arg]);
+            var node = document.querySelector("#math-output p");
+            if (node) {
+                promise = promise.then(function() {
+                    node.innerHTML = "$$" + arg + "$$";
+                    if (w.MathJax && typeof w.MathJax.typesetPromise === 'function') {
+                        if (typeof w.MathJax.typesetClear === 'function') {
+                            w.MathJax.typesetClear([node]);
+                        }
+                        return w.MathJax.typesetPromise([node]);
+                    }
+                    return Promise.resolve();
+                }).catch(function(err) {
+                    console.error(err);
+                });
+            }
         }
-    })(MathJax, window);
+    })(window);
 
     // Using let/const or window bindings properly might be nice, but to match exactly and avoid breaking:
     var $maths = $("#maths-editor");
@@ -58,7 +67,7 @@ if (typeof window !== 'undefined') {
 
     var $ins = $("ins");
 
-    $(window).load(function (e) {
+    $(window).on("load", function (e) {
         $ins.children().length || $ins.parent().append('<a rel="nofollow" target="_blank" href="https://m.do.co/c/b3e7a275836a">Try DigitalOcean. Free $10 credit when you sign up</a>');
     });
 }
