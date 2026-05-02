@@ -1,0 +1,14 @@
+#math-output-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    line-height: 1.5em;
+    border-radius: 3px;
+}
+#math-output {
+    padding: 15px 0 15px;
+    margin: 10px 0 10px;
+}
+
+.mt-25 {
+    margin-top: 25px;
+}
