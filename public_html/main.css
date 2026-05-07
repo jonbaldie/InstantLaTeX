@@ -1,14 +1,156 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+    padding: 20px 10px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.layout-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.sidebar {
+    display: none;
+    flex: 0 0 100%;
+}
+
+.main-content {
+    flex: 0 0 100%;
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        display: block;
+        flex: 0 0 calc(33.333% - 10px);
+    }
+    .main-content {
+        flex: 0 0 calc(66.666% - 10px);
+    }
+}
+
+.nav-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-tabs li {
+    margin-bottom: -1px;
+}
+
+.nav-tabs a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #337ab7;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+
+.nav-tabs a:hover {
+    background-color: #eee;
+    border-color: #eee #eee #ddd;
+}
+
+.nav-tabs a.active {
+    color: #555;
+    background-color: #fff;
+    border-color: #ddd #ddd transparent;
+    cursor: default;
+}
+
+.tab-content {
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 15px;
+    border-radius: 0 0 4px 4px;
+}
+
+.tab-pane {
+    display: none;
+    width: 100%;
+}
+
+.tab-pane.active {
+    display: table;
+}
+
+.tab-pane td {
+    padding: 8px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+}
+
+.tab-pane a {
+    text-decoration: none;
+    color: #337ab7;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    resize: vertical;
+}
+
 #math-output-container {
     padding: 10px;
     border: 1px solid #ccc;
     line-height: 1.5em;
     border-radius: 3px;
+    background: #f9f9f9;
 }
+
 #math-output {
     padding: 15px 0 15px;
     margin: 10px 0 10px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    min-height: 60px;
 }
 
 .mt-25 {
     margin-top: 25px;
+}
+
+footer p {
+    color: #777;
+    font-size: 14px;
 }

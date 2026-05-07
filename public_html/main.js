@@ -1,5 +1,5 @@
 function formatMath(TeX) {
-    return (TeX && TeX != "\\") ? "\\displaystyle{" + TeX + "}" : "";
+    return (TeX && TeX !== "\\") ? "\\displaystyle{" + TeX + "}" : "";
 }
 
 if (typeof window !== 'undefined') {
@@ -11,13 +11,13 @@ if (typeof window !== 'undefined') {
     ga('send', 'pageview');
 
     (function (w) {
-        var promise = Promise.resolve();
+        let promise = Promise.resolve();
 
         w.UpdateMath = function (TeX) {
-            var arg = formatMath(TeX);
-            var node = document.querySelector("#math-output p");
+            const arg = formatMath(TeX);
+            const node = document.querySelector("#math-output p");
             if (node) {
-                promise = promise.then(function() {
+                promise = promise.then(() => {
                     node.textContent = "$$" + arg + "$$";
                     if (w.MathJax && typeof w.MathJax.typesetPromise === 'function') {
                         if (typeof w.MathJax.typesetClear === 'function') {
@@ -26,71 +26,113 @@ if (typeof window !== 'undefined') {
                         return w.MathJax.typesetPromise([node]);
                     }
                     return Promise.resolve();
-                }).catch(function(err) {
+                }).catch(err => {
                     console.error(err);
                 });
             }
         }
     })(window);
 
-    // Using let/const or window bindings properly might be nice, but to match exactly and avoid breaking:
-    var $maths = $("#maths-editor");
+    document.addEventListener("DOMContentLoaded", () => {
+        const mathsEditor = document.getElementById("maths-editor");
 
-    $maths.on("change keyup paste mouseup", function () {
-        UpdateMath($(this).val());
-    });
+        const updateHandler = () => {
+            UpdateMath(mathsEditor.value);
+        };
 
-    try {
-        if (parent.location.hash) {
-            $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
-        }
-    } catch (err) {
-        if (window.location.hash) {
-            $maths.val(decodeURIComponent(window.location.hash.substr(1)));
-        }
-    }
+        ['change', 'keyup', 'paste', 'mouseup'].forEach(evt => {
+            mathsEditor.addEventListener(evt, updateHandler);
+        });
 
-    $("#math-output p").text("$$" + formatMath($maths.val()) + "$$");
-
-    $(".pre-made").click(function (e) {
-        e.preventDefault();
-        var $str = $(this).data("math");
-        var el = $maths[0];
-        var start = el.selectionStart;
-        var end = el.selectionEnd;
-        var val = el.value;
-        $maths.val(val.slice(0, start) + $str + val.slice(end));
-        el.selectionStart = el.selectionEnd = start + $str.length;
-        $maths.focus();
-        UpdateMath($maths.val());
-    });
-
-    $(".math-tab:first").tab("show");
-
-    $(".math-tab").click(function (e) {
-        e.preventDefault();
-        $(this).tab("show");
-    })
-
-    $("#save-page").click(function (e) {
-        e.preventDefault();
         try {
-            parent.location.hash = encodeURIComponent($maths.val());
+            if (window.parent && window.parent.location.hash) {
+                mathsEditor.value = decodeURIComponent(window.parent.location.hash.substr(1));
+            } else if (window.location.hash) {
+                mathsEditor.value = decodeURIComponent(window.location.hash.substr(1));
+            }
         } catch (err) {
-            window.location.hash = encodeURIComponent($maths.val());
+            if (window.location.hash) {
+                mathsEditor.value = decodeURIComponent(window.location.hash.substr(1));
+            }
         }
-        var $btn = $(this);
-        var originalText = $btn.text();
-        $btn.text("Saved!");
-        setTimeout(function() {
-            $btn.text(originalText);
-        }, 2000);
+
+        const mathOutputP = document.querySelector("#math-output p");
+        if (mathOutputP) {
+            mathOutputP.textContent = "$$" + formatMath(mathsEditor.value) + "$$";
+        }
+
+        document.querySelectorAll(".pre-made").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const str = btn.getAttribute("data-math");
+                const start = mathsEditor.selectionStart;
+                const end = mathsEditor.selectionEnd;
+                const val = mathsEditor.value;
+                mathsEditor.value = val.slice(0, start) + str + val.slice(end);
+                mathsEditor.selectionStart = mathsEditor.selectionEnd = start + str.length;
+                mathsEditor.focus();
+                UpdateMath(mathsEditor.value);
+            });
+        });
+
+        // Tabs functionality
+        const tabs = document.querySelectorAll(".math-tab");
+        const panes = document.querySelectorAll(".tab-pane");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", (e) => {
+                e.preventDefault();
+                // Remove active class from all tabs and panes
+                tabs.forEach(t => t.classList.remove("active"));
+                panes.forEach(p => p.classList.remove("active"));
+                
+                // Add active class to clicked tab and corresponding pane
+                tab.classList.add("active");
+                const targetId = tab.getAttribute("href").substring(1);
+                const targetPane = document.getElementById(targetId);
+                if (targetPane) {
+                    targetPane.classList.add("active");
+                }
+            });
+        });
+
+        // Save page functionality
+        const savePageBtn = document.getElementById("save-page");
+        if (savePageBtn) {
+            savePageBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                try {
+                    if (window.parent) {
+                        window.parent.location.hash = encodeURIComponent(mathsEditor.value);
+                    } else {
+                        window.location.hash = encodeURIComponent(mathsEditor.value);
+                    }
+                } catch (err) {
+                    window.location.hash = encodeURIComponent(mathsEditor.value);
+                }
+                const originalText = savePageBtn.textContent;
+                savePageBtn.textContent = "Saved!";
+                setTimeout(() => {
+                    savePageBtn.textContent = originalText;
+                }, 2000);
+            });
+        }
     });
 
-    var $ins = $("ins");
-
-    $(window).on("load", function (e) {
-        $ins.children().length || $ins.parent().append('<a rel="nofollow" target="_blank" href="https://m.do.co/c/b3e7a275836a">Try DigitalOcean. Free $10 credit when you sign up</a>');
+    window.addEventListener("load", () => {
+        document.querySelectorAll("ins").forEach(ins => {
+            if (ins.children.length === 0) {
+                const parent = ins.parentNode;
+                if (parent) {
+                    const link = document.createElement("a");
+                    link.rel = "nofollow";
+                    link.target = "_blank";
+                    link.href = "https://m.do.co/c/b3e7a275836a";
+                    link.textContent = "Try DigitalOcean. Free $10 credit when you sign up";
+                    parent.appendChild(link);
+                }
+            }
+        });
     });
 }
 
