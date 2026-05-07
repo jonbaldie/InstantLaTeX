@@ -1,156 +1,189 @@
+:root {
+    /* Light theme variables */
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --header-bg: #f5f5f5;
+    --border-color: #e0e0e0;
+    --editor-bg: #ffffff;
+    --editor-text: #1a1a1a;
+    --output-bg: #f9f9f9;
+    --output-content-bg: #ffffff;
+    --btn-bg: #e0e0e0;
+    --btn-hover: #d0d0d0;
+    --link-color: #0366d6;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark theme variables */
+        --bg-color: #1e1e1e;
+        --text-color: #cccccc;
+        --header-bg: #2d2d2d;
+        --border-color: #444444;
+        --editor-bg: #1e1e1e;
+        --editor-text: #d4d4d4;
+        --output-bg: #252526;
+        --output-content-bg: #1e1e1e;
+        --btn-bg: #444444;
+        --btn-hover: #555555;
+        --link-color: #4daafc;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.5;
-    color: #333;
+body, html {
     margin: 0;
-    padding: 20px 10px;
+    padding: 0;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
 }
 
-.container {
-    max-width: 900px;
-    margin: 0 auto;
+.ide-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.ide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-content h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-content p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--btn-hover);
+}
+
+.split-pane {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden; /* Prevent scrolling of the whole pane area, scroll individually */
+}
+
+@media (min-width: 768px) {
+    .split-pane {
+        flex-direction: row;
+    }
+}
+
+.pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.editor-pane {
+    border-bottom: 1px solid var(--border-color);
+}
+
+@media (min-width: 768px) {
+    .editor-pane {
+        border-bottom: none;
+        border-right: 1px solid var(--border-color);
+    }
+}
+
+.form-control {
+    flex: 1;
+    width: 100%;
+    border: none;
+    padding: 20px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 16px;
+    background-color: var(--editor-bg);
+    color: var(--editor-text);
+    resize: none;
+    outline: none;
+}
+
+.output-pane {
+    background-color: var(--output-bg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+#math-output {
+    background-color: var(--output-content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 30px;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    overflow-x: auto;
+    color: var(--text-color);
+}
+
+.ad-container {
+    margin-top: 20px;
 }
 
 .text-center {
     text-align: center;
 }
 
-hr {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
-}
-
-.layout-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.sidebar {
-    display: none;
-    flex: 0 0 100%;
-}
-
-.main-content {
-    flex: 0 0 100%;
-}
-
-@media (min-width: 768px) {
-    .sidebar {
-        display: block;
-        flex: 0 0 calc(33.333% - 10px);
-    }
-    .main-content {
-        flex: 0 0 calc(66.666% - 10px);
-    }
-}
-
-.nav-tabs {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0 0 15px 0;
-    border-bottom: 1px solid #ddd;
-}
-
-.nav-tabs li {
-    margin-bottom: -1px;
-}
-
-.nav-tabs a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #337ab7;
-    border: 1px solid transparent;
-    border-radius: 4px 4px 0 0;
-}
-
-.nav-tabs a:hover {
-    background-color: #eee;
-    border-color: #eee #eee #ddd;
-}
-
-.nav-tabs a.active {
-    color: #555;
-    background-color: #fff;
-    border-color: #ddd #ddd transparent;
-    cursor: default;
-}
-
-.tab-content {
-    border: 1px solid #ddd;
-    border-top: none;
-    padding: 15px;
-    border-radius: 0 0 4px 4px;
-}
-
-.tab-pane {
-    display: none;
-    width: 100%;
-}
-
-.tab-pane.active {
-    display: table;
-}
-
-.tab-pane td {
-    padding: 8px;
-    text-align: center;
-    border-top: 1px solid #ddd;
-}
-
-.tab-pane a {
-    text-decoration: none;
-    color: #337ab7;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-control {
-    display: block;
-    width: 100%;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    resize: vertical;
-}
-
-#math-output-container {
+.ide-footer {
     padding: 10px;
-    border: 1px solid #ccc;
-    line-height: 1.5em;
-    border-radius: 3px;
-    background: #f9f9f9;
+    background-color: var(--header-bg);
+    border-top: 1px solid var(--border-color);
+    font-size: 0.85rem;
 }
 
-#math-output {
-    padding: 15px 0 15px;
-    margin: 10px 0 10px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 3px;
-    min-height: 60px;
+.ide-footer p {
+    margin: 0;
 }
 
-.mt-25 {
-    margin-top: 25px;
+a {
+    color: var(--link-color);
+    text-decoration: none;
 }
 
-footer p {
-    color: #777;
-    font-size: 14px;
+a:hover {
+    text-decoration: underline;
+}
+
+/* MathJax dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+    mjx-container {
+        color: var(--text-color);
+    }
 }
