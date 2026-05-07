@@ -35,6 +35,15 @@ if (typeof window !== 'undefined') {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 UpdateMath(mathsEditor.value);
+                try {
+                    if (window.parent) {
+                        window.parent.location.hash = encodeURIComponent(mathsEditor.value);
+                    } else {
+                        window.location.hash = encodeURIComponent(mathsEditor.value);
+                    }
+                } catch (err) {
+                    window.location.hash = encodeURIComponent(mathsEditor.value);
+                }
             }, 300);
         };
 
@@ -121,27 +130,6 @@ if (typeof window !== 'undefined') {
             });
         });
 
-        // Save page functionality
-        const savePageBtn = document.getElementById("save-page");
-        if (savePageBtn) {
-            savePageBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                try {
-                    if (window.parent) {
-                        window.parent.location.hash = encodeURIComponent(mathsEditor.value);
-                    } else {
-                        window.location.hash = encodeURIComponent(mathsEditor.value);
-                    }
-                } catch (err) {
-                    window.location.hash = encodeURIComponent(mathsEditor.value);
-                }
-                const originalText = savePageBtn.textContent;
-                savePageBtn.textContent = "Saved!";
-                setTimeout(() => {
-                    savePageBtn.textContent = originalText;
-                }, 2000);
-            });
-        }
     });
 
     window.addEventListener("load", () => {
