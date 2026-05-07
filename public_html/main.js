@@ -55,7 +55,13 @@ if (typeof window !== 'undefined') {
     $(".pre-made").click(function (e) {
         e.preventDefault();
         var $str = $(this).data("math");
-        $maths.val($maths.val() + $str);
+        var el = $maths[0];
+        var start = el.selectionStart;
+        var end = el.selectionEnd;
+        var val = el.value;
+        $maths.val(val.slice(0, start) + $str + val.slice(end));
+        el.selectionStart = el.selectionEnd = start + $str.length;
+        $maths.focus();
         UpdateMath($maths.val());
     });
 
