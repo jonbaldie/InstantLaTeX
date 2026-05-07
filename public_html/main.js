@@ -79,6 +79,12 @@ if (typeof window !== 'undefined') {
         } catch (err) {
             window.location.hash = encodeURIComponent($maths.val());
         }
+        var $btn = $(this);
+        var originalText = $btn.text();
+        $btn.text("Saved!");
+        setTimeout(function() {
+            $btn.text(originalText);
+        }, 2000);
     });
 
     var $ins = $("ins");
