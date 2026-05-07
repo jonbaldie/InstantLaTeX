@@ -40,8 +40,14 @@ if (typeof window !== 'undefined') {
         UpdateMath($(this).val());
     });
 
-    if (parent.location.hash) {
-        $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
+    try {
+        if (parent.location.hash) {
+            $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
+        }
+    } catch (err) {
+        if (window.location.hash) {
+            $maths.val(decodeURIComponent(window.location.hash.substr(1)));
+        }
     }
 
     $("#math-output p").text("$$" + formatMath($maths.val()) + "$$");
@@ -62,7 +68,11 @@ if (typeof window !== 'undefined') {
 
     $("#save-page").click(function (e) {
         e.preventDefault();
-        parent.location.hash = encodeURIComponent($maths.val());
+        try {
+            parent.location.hash = encodeURIComponent($maths.val());
+        } catch (err) {
+            window.location.hash = encodeURIComponent($maths.val());
+        }
     });
 
     var $ins = $("ins");
