@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
             var node = document.querySelector("#math-output p");
             if (node) {
                 promise = promise.then(function() {
-                    node.innerHTML = "$$" + arg + "$$";
+                    node.textContent = "$$" + arg + "$$";
                     if (w.MathJax && typeof w.MathJax.typesetPromise === 'function') {
                         if (typeof w.MathJax.typesetClear === 'function') {
                             w.MathJax.typesetClear([node]);
@@ -44,7 +44,7 @@ if (typeof window !== 'undefined') {
         $maths.val(decodeURIComponent(parent.location.hash.substr(1)));
     }
 
-    $("#math-output p").html("$${" + $maths.val() + "}$$");
+    $("#math-output p").text("$$" + formatMath($maths.val()) + "$$");
 
     $(".pre-made").click(function (e) {
         e.preventDefault();
