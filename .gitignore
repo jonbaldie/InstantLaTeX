@@ -8,3 +8,5 @@ logs.worktrees/
 *.db
 .beads-credential-key
 node_modules/
+
+.worktrees
