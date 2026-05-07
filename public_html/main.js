@@ -11,24 +11,18 @@ if (typeof window !== 'undefined') {
     ga('send', 'pageview');
 
     (function (w) {
-        let promise = Promise.resolve();
-
         w.UpdateMath = function (TeX) {
             const arg = formatMath(TeX);
             const node = document.querySelector("#math-output p");
             if (node) {
-                promise = promise.then(() => {
+                if (typeof katex !== 'undefined') {
+                    katex.render(arg, node, {
+                        throwOnError: false,
+                        displayMode: true
+                    });
+                } else {
                     node.textContent = "$$" + arg + "$$";
-                    if (w.MathJax && typeof w.MathJax.typesetPromise === 'function') {
-                        if (typeof w.MathJax.typesetClear === 'function') {
-                            w.MathJax.typesetClear([node]);
-                        }
-                        return w.MathJax.typesetPromise([node]);
-                    }
-                    return Promise.resolve();
-                }).catch(err => {
-                    console.error(err);
-                });
+                }
             }
         }
     })(window);
@@ -58,7 +52,7 @@ if (typeof window !== 'undefined') {
 
         const mathOutputP = document.querySelector("#math-output p");
         if (mathOutputP) {
-            mathOutputP.textContent = "$$" + formatMath(mathsEditor.value) + "$$";
+            UpdateMath(mathsEditor.value);
         }
 
         document.querySelectorAll(".pre-made").forEach(btn => {

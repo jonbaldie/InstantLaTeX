@@ -14,4 +14,4 @@ Other great LaTeX tools:
 
 (c) 2016 Jonathan Baldie.
 
-Thanks to MathJax for their excellent TeX rendering.
+Thanks to KaTeX for their excellent, fast TeX rendering.
