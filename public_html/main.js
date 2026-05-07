@@ -30,12 +30,43 @@ if (typeof window !== 'undefined') {
     document.addEventListener("DOMContentLoaded", () => {
         const mathsEditor = document.getElementById("maths-editor");
 
+        let debounceTimer;
         const updateHandler = () => {
-            UpdateMath(mathsEditor.value);
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                UpdateMath(mathsEditor.value);
+            }, 300);
         };
 
         ['change', 'keyup', 'paste', 'mouseup'].forEach(evt => {
             mathsEditor.addEventListener(evt, updateHandler);
+        });
+
+        mathsEditor.addEventListener("keydown", function(e) {
+            const pairs = {
+                '(': ')',
+                '[': ']',
+                '{': '}'
+            };
+            if (pairs[e.key]) {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const val = this.value;
+                const selectedText = val.substring(start, end);
+                const insertStr = e.key + selectedText + pairs[e.key];
+                
+                this.value = val.substring(0, start) + insertStr + val.substring(end);
+                
+                if (start === end) {
+                    this.selectionStart = this.selectionEnd = start + 1;
+                } else {
+                    this.selectionStart = start + 1;
+                    this.selectionEnd = end + 1;
+                }
+                
+                updateHandler();
+            }
         });
 
         try {
