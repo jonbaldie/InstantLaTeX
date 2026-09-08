@@ -6,11 +6,15 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+    "testMatch": ["<rootDir>/tests/**/*.test.js"]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "jest": "^30.3.0"
+    "jest": "^30.3.0",
+    "katex": "^0.16.9"
   }
 }

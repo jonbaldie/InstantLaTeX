@@ -136,11 +136,11 @@ describe('editor synchronization', () => {
         activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
 
         jest.advanceTimersByTime(299);
-        expect(activeHarness.output.textContent).toBe('$$\\displaystyle{x}$$');
+        expect(activeHarness.output.textContent).toBe('$$x$$');
         expect(activeHarness.parent.location.hash).toBe('');
 
         jest.advanceTimersByTime(1);
-        expect(activeHarness.output.textContent).toBe('$$\\displaystyle{x+y}$$');
+        expect(activeHarness.output.textContent).toBe('$$x+y$$');
         expect(activeHarness.parent.location.hash).toBe(`#${encodeURIComponent('x+y')}`);
     });
 
@@ -161,7 +161,7 @@ describe('editor synchronization', () => {
         activeHarness.dispatchHashchange(encodeURIComponent('x^2'));
 
         expect(activeHarness.mathsEditor.value).toBe('x^2');
-        expect(activeHarness.output.textContent).toBe('$$\\displaystyle{x^2}$$');
+        expect(activeHarness.output.textContent).toBe('$$x^2$$');
     });
 
     it('ignores malformed URL hash encoding during navigation', () => {

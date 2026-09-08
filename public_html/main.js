@@ -1,5 +1,5 @@
 function formatMath(TeX) {
-    return (TeX && TeX !== "\\") ? "\\displaystyle{" + TeX + "}" : "";
+    return (TeX && TeX !== "\\") ? TeX : "";
 }
 
 if (typeof window !== 'undefined') {
