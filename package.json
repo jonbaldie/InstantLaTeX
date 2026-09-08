@@ -1,5 +1,5 @@
 {
-  "name": "test-setup",
+  "name": "instantlatex",
   "version": "1.0.0",
   "description": "A fun site I whipped up - it allows you to type in LaTeX and TeX and see it instantly rendered.",
   "main": "index.js",
