@@ -16,9 +16,11 @@ class FakeEventTarget {
     }
 }
 
-function createBrowserHarness(initialHash = '') {
+const DEFAULT_QUADRATIC_FORMULA = String.raw`\frac{-b\pm\sqrt{b^2-4ac}}{2a}`;
+
+function createBrowserHarness(initialHash = '', initialEditorValue = 'x') {
     const mathsEditor = new FakeEventTarget();
-    mathsEditor.value = 'x';
+    mathsEditor.value = initialEditorValue;
 
     const normalizeHash = value => {
         if (!value) {
@@ -184,6 +186,13 @@ describe('editor synchronization', () => {
 
         expect(activeHarness.mathsEditor.value).toBe('x^2');
         expect(activeHarness.parent.location.hash).toBe(`#${encodeURIComponent('x^2')}`);
+    });
+
+    it('keeps the default formula when the initial hash is bare', () => {
+        activeHarness = createBrowserHarness('#', DEFAULT_QUADRATIC_FORMULA);
+
+        expect(activeHarness.mathsEditor.value).toBe(DEFAULT_QUADRATIC_FORMULA);
+        expect(activeHarness.output.textContent).toBe(`$$${DEFAULT_QUADRATIC_FORMULA}$$`);
     });
 
     it('skips the hash write and still updates the preview for unpaired surrogates', () => {

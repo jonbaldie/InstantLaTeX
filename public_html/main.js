@@ -69,8 +69,11 @@ if (typeof window !== 'undefined') {
             clearTimeout(debounceTimer);
             try {
                 const encodedHash = getEncodedHash();
-                const value = encodedHash === null ? initialEditorValue : decodeURIComponent(encodedHash);
-                mathsEditor.value = value;
+                if (encodedHash === null) {
+                    mathsEditor.value = initialEditorValue;
+                } else if (encodedHash !== '') {
+                    mathsEditor.value = decodeURIComponent(encodedHash);
+                }
             } catch (err) {
                 // Ignore malformed URL fragments and leave the current editor value intact.
             }
