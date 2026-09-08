@@ -29,20 +29,76 @@ if (typeof window !== 'undefined') {
 
     document.addEventListener("DOMContentLoaded", () => {
         const mathsEditor = document.getElementById("maths-editor");
+        const initialEditorValue = mathsEditor.value;
+
+        const getUrlTarget = () => {
+            try {
+                if (window.parent && window.parent.location) {
+                    return window.parent;
+                }
+            } catch (err) {
+                // Fall back to the current window when the parent is inaccessible.
+            }
+            return window;
+        };
+
+        const getEncodedHash = () => {
+            const urlTarget = getUrlTarget();
+
+            try {
+                if (urlTarget.location.hash) {
+                    return urlTarget.location.hash.substring(1);
+                }
+            } catch (err) {
+                // Fall back to the current window when the target hash is inaccessible.
+            }
+
+            try {
+                if (window.location.hash) {
+                    return window.location.hash.substring(1);
+                }
+            } catch (err) {
+                // Ignore inaccessible URL state.
+            }
+
+            return null;
+        };
 
         let debounceTimer;
+        const updateFromHash = () => {
+            clearTimeout(debounceTimer);
+            try {
+                const encodedHash = getEncodedHash();
+                const value = encodedHash === null ? initialEditorValue : decodeURIComponent(encodedHash);
+                mathsEditor.value = value;
+            } catch (err) {
+                // Ignore malformed URL fragments and leave the current editor value intact.
+            }
+            UpdateMath(mathsEditor.value);
+        };
+
         const updateHandler = () => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 UpdateMath(mathsEditor.value);
+                const encodedHash = `#${encodeURIComponent(mathsEditor.value)}`;
+                const urlTarget = getUrlTarget();
+
                 try {
-                    if (window.parent) {
-                        window.parent.location.hash = encodeURIComponent(mathsEditor.value);
-                    } else {
-                        window.location.hash = encodeURIComponent(mathsEditor.value);
+                    if (urlTarget.history && typeof urlTarget.history.replaceState === 'function') {
+                        urlTarget.history.replaceState(null, '', encodedHash);
+                        return;
                     }
                 } catch (err) {
-                    window.location.hash = encodeURIComponent(mathsEditor.value);
+                    // Fall back to replacing the URL when the History API is unavailable.
+                }
+
+                try {
+                    if (urlTarget.location && typeof urlTarget.location.replace === 'function') {
+                        urlTarget.location.replace(encodedHash);
+                    }
+                } catch (err) {
+                    // Ignore inaccessible URL state.
                 }
             }, 300);
         };
@@ -78,22 +134,18 @@ if (typeof window !== 'undefined') {
             }
         });
 
+        const hashChangeTarget = getUrlTarget();
         try {
-            if (window.parent && window.parent.location.hash) {
-                mathsEditor.value = decodeURIComponent(window.parent.location.hash.substr(1));
-            } else if (window.location.hash) {
-                mathsEditor.value = decodeURIComponent(window.location.hash.substr(1));
+            if (hashChangeTarget && typeof hashChangeTarget.addEventListener === 'function') {
+                hashChangeTarget.addEventListener("hashchange", updateFromHash);
+            } else {
+                window.addEventListener("hashchange", updateFromHash);
             }
         } catch (err) {
-            if (window.location.hash) {
-                mathsEditor.value = decodeURIComponent(window.location.hash.substr(1));
-            }
+            window.addEventListener("hashchange", updateFromHash);
         }
 
-        const mathOutputP = document.querySelector("#math-output p");
-        if (mathOutputP) {
-            UpdateMath(mathsEditor.value);
-        }
+        updateFromHash();
 
         document.querySelectorAll(".pre-made").forEach(btn => {
             btn.addEventListener("click", (e) => {
