@@ -16,13 +16,10 @@ class FakeEventTarget {
     }
 }
 
-function createBrowserHarness() {
+function createBrowserHarness(initialHash = '') {
     const mathsEditor = new FakeEventTarget();
     mathsEditor.value = 'x';
 
-    let currentHash = '';
-    let historyIndex = 0;
-    const historyEntries = [''];
     const normalizeHash = value => {
         if (!value) {
             return '';
@@ -31,6 +28,9 @@ function createBrowserHarness() {
         const stringValue = String(value);
         return stringValue.startsWith('#') ? stringValue : `#${stringValue}`;
     };
+    let currentHash = initialHash ? normalizeHash(initialHash) : '';
+    let historyIndex = 0;
+    const historyEntries = [''];
     const history = {
         get length() {
             return historyEntries.length;
@@ -169,6 +169,35 @@ describe('editor synchronization', () => {
 
         expect(() => activeHarness.dispatchHashchange('%E0%A4%A')).not.toThrow();
         expect(activeHarness.mathsEditor.value).toBe('x');
+    });
+
+    it('keeps the default formula and binds listeners when the initial hash is malformed', () => {
+        activeHarness = createBrowserHarness('%E0%A4%A');
+
+        expect(activeHarness.mathsEditor.value).toBe('x');
+        expect(activeHarness.output.textContent).toBe('$$x$$');
+
+        // Listeners must still be bound after the failed restore.
+        activeHarness.mathsEditor.value = 'x^2';
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+
+        expect(activeHarness.mathsEditor.value).toBe('x^2');
+        expect(activeHarness.parent.location.hash).toBe(`#${encodeURIComponent('x^2')}`);
+    });
+
+    it('skips the hash write and still updates the preview for unpaired surrogates', () => {
+        activeHarness = createBrowserHarness();
+
+        expect(() => {
+            activeHarness.mathsEditor.value = 'x\uD800y';
+            activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+            jest.advanceTimersByTime(300);
+        }).not.toThrow();
+
+        expect(activeHarness.output.textContent).toBe('$$x\uD800y$$');
+        expect(activeHarness.history.replaceState).not.toHaveBeenCalled();
+        expect(activeHarness.parent.location.hash).toBe('');
     });
 
     it('cancels a pending URL write when navigation restores a hash', () => {
