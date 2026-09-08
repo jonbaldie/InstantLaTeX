@@ -81,7 +81,14 @@ if (typeof window !== 'undefined') {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 UpdateMath(mathsEditor.value);
-                const encodedHash = `#${encodeURIComponent(mathsEditor.value)}`;
+                let encodedHash;
+                try {
+                    encodedHash = `#${encodeURIComponent(mathsEditor.value)}`;
+                } catch (err) {
+                    // Skip the hash write when the value cannot be encoded,
+                    // e.g. unpaired UTF-16 surrogates. The preview already updated.
+                    return;
+                }
                 const urlTarget = getUrlTarget();
 
                 try {
