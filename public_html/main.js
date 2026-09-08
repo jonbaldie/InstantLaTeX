@@ -47,7 +47,7 @@ if (typeof window !== 'undefined') {
             }, 300);
         };
 
-        ['change', 'keyup', 'paste', 'mouseup'].forEach(evt => {
+        ['change', 'keyup', 'paste', 'mouseup', 'input'].forEach(evt => {
             mathsEditor.addEventListener(evt, updateHandler);
         });
 
