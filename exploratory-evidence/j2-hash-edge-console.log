@@ -1,0 +1,16 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] 1 encoded hash -> editor: "\\frac{1}{2}" output: "12\\frac{1}{2}21​"
+[driver] 2 raw hash -> editor: "\\frac{a}{b}" output: "ab\\frac{a}{b}ba​"
+[driver] 3 malformed hash -> editor: "\\frac{a}{b}" output: "ab\\frac{a}{b}ba​"
+[driver] 4 empty fragment -> editor: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}" output: "−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"
+[driver] 5 no fragment -> editor: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[console.warn] LaTeX-incompatible input and strict mode is set to 'warn': In LaTeX, \\ or \newline does nothing in display mode [newLineInDisplayMode]
+[driver] 6 percent TeX -> editor: "50\\% of \\\\ 2+2" output: "50%of2+250\\% of \\\\ 2+250%of2+2"
+[driver] 6 hash: #50\% of \\ 2+2
+[driver] 6 reopen -> editor: "50\\% of \\\\ 2+2" output: "50%of2+250\\% of \\\\ 2+250%of2+2"
+[requestfailed] https://pagead2.googlesyndication.com/pagead/ping?e=1 net::ERR_ABORTED
+[requestfailed] https://pagead2.googlesyndication.com/pagead/ping?e=1 net::ERR_ABORTED
+[driver] 7 surrogate -> editor: "x = \udeda" output len: 5
+[driver] 7 hash after surrogate: 
+[driver] 8 external hashchange -> editor: "\\sqrt{2}" output: "2\\sqrt{2}2​"
+[driver] 9 after back -> url: http://localhost:8642/index.html#%5Csqrt%7B2%7D editor: "\\sqrt{2}"

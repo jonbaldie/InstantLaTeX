@@ -1,0 +1,10 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] katex loaded: true
+[driver] initial hash: 
+[driver] renders sum glyph: true
+[driver] hash after typing (decoded): #\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}
+[driver] editor value matches hash: false
+[driver] reopen renders identical markup: true
+[driver] reopen editor value: \sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}
+[driver] incomplete TeX still produced markup: true
+[driver] fixed TeX renders with 2 visible: true

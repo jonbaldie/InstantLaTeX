@@ -1,0 +1,9 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] Cmd+A selection: [30,30]
+[driver] typed {{a}]: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a{a}}" (expected "{a}")
+[driver] typed [(x+y)]: "(x+y))" (expected "(x+y)")
+[driver] typed full default: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}}}}"
+[driver] expected:           "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[driver] match: false
+[driver] output text: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}}}}"
+[driver] hash (decoded): #\frac{-b\pm\sqrt{b^2-4ac}}{2a}}}}

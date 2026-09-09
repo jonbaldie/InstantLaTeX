@@ -1,0 +1,15 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] triple-click selection: {"start":30,"end":30}
+[driver] 1 typed value: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}}}}"
+[driver] 1 expected:   "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[driver] 1 output text: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}}}}"
+[driver] 2 typed "(x)" -> "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}(x))"
+[driver] 3 wrap abc with ( -> "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}(abc)" sel: [31,34]
+[driver] 4 invalid TeX output: "\\notacommand\\notacommand\\notacommand"
+[driver] 5 cleared editor -> hash: "" output: ""
+[driver] 5 reopen bare hash -> editor: "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[console.warn] LaTeX-incompatible input and strict mode is set to 'warn': In LaTeX, \\ or \newline does nothing in display mode [newLineInDisplayMode]
+[driver] 6 multiline -> editor: "line1 \\\\\nline2 \\alpha" hash: #line1 \\
+line2 \alpha
+[driver] 7 UI hooks present: {"preMade":0,"tabs":0,"panes":0}
+[driver] 8 ad ins children: {"insChildren":1,"containerText":"(adsbygoogle = window.adsbygoogle || []).push({});"}

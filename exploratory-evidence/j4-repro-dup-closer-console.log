@@ -1,0 +1,4 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] start value: ""
+[driver] typed (x) -> "(x))" | expected "(x)" | BUG: true
+[driver] type { then Backspace -> "}" (expected "")
