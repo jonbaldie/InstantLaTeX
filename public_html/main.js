@@ -123,11 +123,17 @@ if (typeof window !== 'undefined') {
                 '[': ']',
                 '{': '}'
             };
+            const closingPairs = {
+                ')': '(',
+                ']': '[',
+                '}': '{'
+            };
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            const val = this.value;
+
             if (pairs[e.key]) {
                 e.preventDefault();
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                const val = this.value;
                 const selectedText = val.substring(start, end);
                 const insertStr = e.key + selectedText + pairs[e.key];
                 
@@ -140,6 +146,21 @@ if (typeof window !== 'undefined') {
                     this.selectionEnd = end + 1;
                 }
                 
+                updateHandler();
+                return;
+            }
+
+            if (closingPairs[e.key] && start === end && val[start] === e.key) {
+                e.preventDefault();
+                this.selectionStart = this.selectionEnd = start + 1;
+                updateHandler();
+                return;
+            }
+
+            if (e.key === 'Backspace' && start === end && start > 0 && pairs[val[start - 1]] === val[start]) {
+                e.preventDefault();
+                this.value = val.substring(0, start - 1) + val.substring(start + 1);
+                this.selectionStart = this.selectionEnd = start - 1;
                 updateHandler();
             }
         });
