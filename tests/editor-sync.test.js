@@ -9,6 +9,21 @@ class FakeEventTarget {
         this.listeners.set(type, listeners);
     }
 
+    setSelectionRange(start, end) {
+        this.selectionStart = start;
+        this.selectionEnd = end;
+    }
+
+    setRangeText(replacement, start, end, selectionMode) {
+        this.value = this.value.slice(0, start) + replacement + this.value.slice(end);
+        const selectionEnd = start + replacement.length;
+
+        if (selectionMode === 'end') {
+            this.selectionStart = selectionEnd;
+            this.selectionEnd = selectionEnd;
+        }
+    }
+
     dispatchEvent(event) {
         for (const listener of this.listeners.get(event.type) || []) {
             listener.call(this, event);
