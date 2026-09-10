@@ -118,6 +118,9 @@ if (typeof window !== 'undefined') {
         });
 
         mathsEditor.addEventListener("keydown", function(e) {
+            // Leave browser, OS, and editor shortcuts untouched.
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+
             const pairs = {
                 '(': ')',
                 '[': ']',

@@ -134,10 +134,15 @@ function createBrowserHarness(initialHash = '', initialEditorValue = 'x') {
     };
 }
 
-function dispatchEditorKey(mathsEditor, key) {
+function dispatchEditorKey(mathsEditor, key, modifiers = {}) {
     const event = {
         type: 'keydown',
         key,
+        ctrlKey: false,
+        altKey: false,
+        metaKey: false,
+        shiftKey: false,
+        ...modifiers,
         defaultPrevented: false,
         preventDefault() {
             this.defaultPrevented = true;
@@ -145,7 +150,7 @@ function dispatchEditorKey(mathsEditor, key) {
     };
     const shouldApplyNativeAction = mathsEditor.dispatchEvent(event);
 
-    if (shouldApplyNativeAction) {
+    if (shouldApplyNativeAction && !event.ctrlKey && !event.altKey && !event.metaKey) {
         const start = mathsEditor.selectionStart;
         const end = mathsEditor.selectionEnd;
 
@@ -236,6 +241,44 @@ describe('editor synchronization', () => {
         expect(mathsEditor.value).toBe('(abc)');
         expect(mathsEditor.selectionStart).toBe(1);
         expect(mathsEditor.selectionEnd).toBe(4);
+    });
+
+    it('passes Control, Alt, and Meta opener chords through unchanged', () => {
+        activeHarness = createBrowserHarness('', 'X');
+        const { mathsEditor, output, parent } = activeHarness;
+
+        for (const modifier of ['ctrlKey', 'altKey', 'metaKey']) {
+            for (const opener of ['(', '[', '{']) {
+                mathsEditor.value = 'X';
+                mathsEditor.selectionStart = mathsEditor.selectionEnd = 1;
+
+                const event = dispatchEditorKey(mathsEditor, opener, { [modifier]: true });
+
+                expect(event.defaultPrevented).toBe(false);
+                expect(mathsEditor.value).toBe('X');
+                expect(mathsEditor.selectionStart).toBe(1);
+                expect(mathsEditor.selectionEnd).toBe(1);
+                expect(output.textContent).toBe('$$X$$');
+                expect(parent.location.hash).toBe('');
+            }
+        }
+    });
+
+    it('keeps Shift-generated openers eligible for auto-pairing', () => {
+        activeHarness = createBrowserHarness('', '');
+        const { mathsEditor } = activeHarness;
+
+        for (const [opener, closer] of [['(', ')'], ['{', '}']]) {
+            mathsEditor.value = '';
+            mathsEditor.selectionStart = mathsEditor.selectionEnd = 0;
+
+            const event = dispatchEditorKey(mathsEditor, opener, { shiftKey: true });
+
+            expect(event.defaultPrevented).toBe(true);
+            expect(mathsEditor.value).toBe(`${opener}${closer}`);
+            expect(mathsEditor.selectionStart).toBe(1);
+            expect(mathsEditor.selectionEnd).toBe(1);
+        }
     });
 
     it('keeps the corrected value, preview, and shareable hash synchronized', () => {
