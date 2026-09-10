@@ -1,5 +1,15 @@
 # Agent Instructions
 
+## Shared Fleet host
+
+Fleet runs this repository with other autonomous jobs on one macOS host.
+
+- Run Jest with `npm test -- --maxWorkers=2`.
+- Run browser tests with `npm run test:e2e`.
+- Give each browser test run a unique Chrome profile under `/tmp`.
+- Remove the exact profile directory in the test cleanup after Chrome closes.
+- Preserve all other files and directories under `/tmp`.
+
 ## Agent skills
 
 ### Issue tracker

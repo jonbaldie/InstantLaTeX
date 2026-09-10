@@ -152,14 +152,20 @@ async function assertSynchronized(page, expectedValue) {
 }
 
 async function run() {
-    const { server, url } = await startServer();
+    const profileDirectory = fs.mkdtempSync(path.join('/tmp', 'instantlatex-issue-15-e2e-'));
+    let server;
     let browser;
+    let testError;
+    let cleanupError;
 
     try {
+        const startedServer = await startServer();
+        server = startedServer.server;
+        const { url } = startedServer;
         browser = await puppeteer.launch({
             executablePath: findChrome(),
             headless: 'new',
-            userDataDir: `/tmp/instantlatex-issue-15-e2e-${Date.now()}`,
+            userDataDir: profileDirectory,
             args: ['--no-first-run', '--disable-extensions']
         });
         const page = await browser.newPage();
@@ -211,11 +217,44 @@ async function run() {
 
         assert.deepEqual(pageErrors, []);
         console.log('editor undo/redo regression scenarios passed');
+    } catch (error) {
+        testError = error;
     } finally {
-        if (browser) {
-            await browser.close();
+        try {
+            if (browser) {
+                await browser.close();
+            }
+        } catch (error) {
+            cleanupError = error;
         }
-        await new Promise(resolve => server.close(resolve));
+
+        try {
+            fs.rmSync(profileDirectory, { recursive: true, force: true });
+            assert.equal(
+                fs.existsSync(profileDirectory),
+                false,
+                `browser profile should be removed after the test: ${profileDirectory}`
+            );
+        } catch (error) {
+            cleanupError ||= error;
+        }
+
+        if (server) {
+            try {
+                await new Promise((resolve, reject) => {
+                    server.close(error => error ? reject(error) : resolve());
+                });
+            } catch (error) {
+                cleanupError ||= error;
+            }
+        }
+    }
+
+    if (testError) {
+        throw testError;
+    }
+    if (cleanupError) {
+        throw cleanupError;
     }
 }
 
