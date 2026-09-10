@@ -33,8 +33,13 @@ if (typeof window !== 'undefined') {
 
         const getUrlTarget = () => {
             try {
-                if (window.parent && window.parent.location) {
-                    return window.parent;
+                // Accessing `window.parent.location` does not throw cross-origin, but
+                // reading its members does. Only target the parent when its URL is
+                // genuinely readable (same origin); otherwise updating it would
+                // navigate the host page away (#20).
+                const parent = window.parent;
+                if (parent && typeof parent.location.hash === 'string') {
+                    return parent;
                 }
             } catch (err) {
                 // Fall back to the current window when the parent is inaccessible.
