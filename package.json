@@ -4,7 +4,8 @@
   "description": "A fun site I whipped up - it allows you to type in LaTeX and TeX and see it instantly rendered.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "node tests/editor-undo.e2e.js"
   },
   "jest": {
     "testMatch": [

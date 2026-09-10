@@ -132,20 +132,44 @@ if (typeof window !== 'undefined') {
             const end = this.selectionEnd;
             const val = this.value;
 
+            const applyEditorEdit = (command, replacement, editStart, editEnd) => {
+                this.setSelectionRange(editStart, editEnd);
+                const previousValue = this.value;
+
+                try {
+                    if (typeof document.execCommand === 'function') {
+                        document.execCommand(command, false, replacement);
+                        if (this.value !== previousValue) {
+                            return true;
+                        }
+                    }
+                } catch (err) {
+                    // Fall back to the textarea range API when the native command is unavailable.
+                }
+
+                if (typeof this.setRangeText === 'function') {
+                    this.setRangeText(replacement, editStart, editEnd, 'end');
+                    this.dispatchEvent(new Event('input', { bubbles: true }));
+                    return this.value !== previousValue;
+                }
+
+                return false;
+            };
+
             if (pairs[e.key]) {
                 e.preventDefault();
                 const selectedText = val.substring(start, end);
                 const insertStr = e.key + selectedText + pairs[e.key];
-                
-                this.value = val.substring(0, start) + insertStr + val.substring(end);
-                
-                if (start === end) {
-                    this.selectionStart = this.selectionEnd = start + 1;
-                } else {
-                    this.selectionStart = start + 1;
-                    this.selectionEnd = end + 1;
+
+                if (applyEditorEdit('insertText', insertStr, start, end)) {
+                    if (start === end) {
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    } else {
+                        this.selectionStart = start + 1;
+                        this.selectionEnd = end + 1;
+                    }
                 }
-                
+
                 updateHandler();
                 return;
             }
@@ -159,8 +183,9 @@ if (typeof window !== 'undefined') {
 
             if (e.key === 'Backspace' && start === end && start > 0 && pairs[val[start - 1]] === val[start]) {
                 e.preventDefault();
-                this.value = val.substring(0, start - 1) + val.substring(start + 1);
-                this.selectionStart = this.selectionEnd = start - 1;
+                if (applyEditorEdit('delete', '', start - 1, start + 1)) {
+                    this.selectionStart = this.selectionEnd = start - 1;
+                }
                 updateHandler();
             }
         });
