@@ -1,0 +1,12 @@
+[driver] run 1: parent URL after typing "Q1": http://127.0.0.1:8642/host.html#Q1%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 1: frame value kept: "Q1\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[driver] run 1: parent URL mutated: true
+[driver] run 1: after parent hash change -> frame: {"value":"unrelated","rendered":"unrelatedunrelatedunrelated"}
+[driver] run 2: parent URL after typing "Q2": http://127.0.0.1:8642/host.html#Q2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 2: frame value kept: "Q2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[driver] run 2: parent URL mutated: true
+[driver] run 2: after parent hash change -> frame: {"value":"unrelated","rendered":"unrelatedunrelatedunrelated"}
+[driver] run 3: parent URL after typing "Q3": http://127.0.0.1:8642/host.html#Q3%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 3: frame value kept: "Q3\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+[driver] run 3: parent URL mutated: true
+[driver] run 3: after parent hash change -> frame: {"value":"unrelated","rendered":"unrelatedunrelatedunrelated"}

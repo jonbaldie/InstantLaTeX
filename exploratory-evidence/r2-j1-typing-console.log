@@ -1,0 +1,14 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] loaded, katex ready: true
+[driver] starting state: {"value":"","selStart":0,"selEnd":0,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after "(x": {"value":"(x)","selStart":2,"selEnd":2,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after ")": {"value":"(x)","selStart":3,"selEnd":3,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after "+y)": {"value":"(x)+y)","selStart":6,"selEnd":6,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after Backspace at end: {"value":"(x)+y","selStart":5,"selEnd":5,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after 2nd Backspace: {"value":"(x)+","selStart":4,"selEnd":4,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after Cmd+Z undo: {"value":"(x)+","selStart":4,"selEnd":4,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after Cmd+Shift+Z redo: {"value":"(x)+","selStart":4,"selEnd":4,"hash":"","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] hand-typed quadratic: {"value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","selStart":30,"selEnd":30,"hash":"#\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] after wrap of selection "abc" with "(": {"value":"(abc)","selStart":1,"selEnd":4,"hash":"#\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hasError":false,"rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​"}
+[driver] hash after quadratic: #(abc)
+[driver] reopened from hash: {"value":"(abc)","hasError":false}

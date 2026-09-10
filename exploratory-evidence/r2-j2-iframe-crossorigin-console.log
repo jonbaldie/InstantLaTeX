@@ -1,0 +1,9 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] iframe url: http://127.0.0.1:8642/index.html
+[driver] initial frame state: {"value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"","rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a"}
+[driver] after typing in iframe: {"value":"E=mc^2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"","rendered":"E=mc2−b±b2−4ac2aE=mc^2\\frac{-b\\pm\\sqrt{b"}
+[driver] PARENT url after typing: http://127.0.0.1:8642/host.html#E%3Dmc%5E2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] frame state after longer wait: {"value":"E=mc^2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"","rendered":"E=mc2−b±b2−4ac2aE=mc^2\\frac{-b\\pm\\sqrt{b"}
+[driver] PARENT url after longer wait: http://127.0.0.1:8642/host.html#E%3Dmc%5E2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] after typing ZZZ: {"value":"E=mc^2ZZZ\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"","rendered":"E=mc2ZZZ−b±b2−4ac2aE=mc^2ZZZ\\frac{-b\\pm\\"}
+[driver] PARENT url after ZZZ: http://127.0.0.1:8642/host.html#E%3Dmc%5E2ZZZ%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D

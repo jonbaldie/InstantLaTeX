@@ -1,0 +1,5 @@
+[driver] run 1: iframe url: http://localhost:8642/index.html
+[driver-error] Error: Attempted to use detached Frame '77A2FFC91608A2E9582073DAC2D6610A'.
+    at CdpFrame.<anonymous> (file:///Users/jonathanbaldie/Code-2/github.com/jonbaldie/InstantLaTeX/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:99:23)
+    at module.exports (/private/tmp/ilx-x2/r2-j2-repro2.js:14:36)
+    at async main (/private/tmp/ilx-x2/drive.js:39:5)

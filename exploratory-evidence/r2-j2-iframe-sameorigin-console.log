@@ -1,0 +1,11 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] iframe url: http://localhost:8642/index.html
+[driver] initial frame state: {"value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","rendered":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a"}
+[driver] after typing in iframe: {"value":"E=mc^2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","rendered":"E=mc2−b±b2−4ac2aE=mc^2\\frac{-b\\pm\\sqrt{b"}
+[driver] parent hash: http://localhost:8642/host.html#E%3Dmc%5E2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] iframe hash: http://localhost:8642/index.html
+[driver] parent history.length after more typing: 2 -> 2
+[driver] after parent hash edit: {"value":"x^2","rendered":"x2x^2x2"}
+[driver] after parent reload: {"value":"x^2"}
+[driver] parent url after Back: http://localhost:8642/host.html#E%3Dmc%5E2%2Bp%5E2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] frame state after Back: {"value":"E=mc^2+p^2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"}

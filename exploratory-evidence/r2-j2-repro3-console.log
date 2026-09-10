@@ -1,0 +1,14 @@
+[driver] [run1 console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] run 1: iframe url: http://localhost:8642/index.html
+[driver] [run1 console.error] Failed to load resource: the server responded with a status of 404 (File not found)
+[driver] run 1: parent URL after typing: http://localhost:8642/index.html#Q1%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 1: frame state: {"value":"Q1\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"#Q1%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D","rendered":"Q1−b±b2−4ac2aQ1\\frac{-b\\pm\\sqr"}
+[driver] run 1: parent URL mutated: true
+[driver] run 2: iframe url: http://localhost:8642/index.html
+[driver] run 2: parent URL after typing: http://localhost:8642/index.html#Q2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 2: frame state: {"value":"Q2\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"#Q2%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D","rendered":"Q2−b±b2−4ac2aQ2\\frac{-b\\pm\\sqr"}
+[driver] run 2: parent URL mutated: true
+[driver] run 3: iframe url: http://localhost:8642/index.html
+[driver] run 3: parent URL after typing: http://localhost:8642/index.html#Q3%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D
+[driver] run 3: frame state: {"value":"Q3\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","ownHash":"#Q3%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D","rendered":"Q3−b±b2−4ac2aQ3\\frac{-b\\pm\\sqr"}
+[driver] run 3: parent URL mutated: true

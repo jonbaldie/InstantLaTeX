@@ -1,0 +1,3 @@
+[driver] control plain textarea: before="(x+y" after Cmd+Z="(x+y"
+[driver] control after execCommand('undo'): "(x+y)"
+[driver] control execCommand edit: before="(x+yhXello" after Cmd+Z="(x+yhXello"

@@ -1,0 +1,5 @@
+[driver] iframe-side result: replace() called without throwing
+[driver] main frame url after control replace: http://localhost:8642/index.html#ctrltest
+[driver] top title now: Instant LaTeX - Online LaTeX math formula editor
+[driver] cross-origin parent.history.replaceState: replaceState threw: SecurityError
+[driver] parent hash read threw: SecurityError
