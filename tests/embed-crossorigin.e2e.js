@@ -197,14 +197,20 @@ async function runScenario(browser, { server, port, embedHost }) {
 }
 
 async function run() {
-    const { server, port } = await startServer();
+    const profileDirectory = fs.mkdtempSync(path.join('/tmp', 'instantlatex-issue-20-e2e-'));
+    let server;
     let browser;
+    let testError;
+    let cleanupError;
 
     try {
+        const startedServer = await startServer();
+        server = startedServer.server;
+        const { port } = startedServer;
         browser = await puppeteer.launch({
             executablePath: findChrome(),
             headless: 'new',
-            userDataDir: `/tmp/instantlatex-issue-20-e2e-${Date.now()}`,
+            userDataDir: profileDirectory,
             args: ['--no-first-run', '--disable-extensions']
         });
 
@@ -229,11 +235,44 @@ async function run() {
         assert.ok(state.url.startsWith(`http://127.0.0.1:${port}/`));
         console.log('same-origin embed: host page fragment still shareable');
         await page.close();
+    } catch (error) {
+        testError = error;
     } finally {
-        if (browser) {
-            await browser.close();
+        try {
+            if (browser) {
+                await browser.close();
+            }
+        } catch (error) {
+            cleanupError = error;
         }
-        await new Promise(resolve => server.close(resolve));
+
+        try {
+            fs.rmSync(profileDirectory, { recursive: true, force: true });
+            assert.equal(
+                fs.existsSync(profileDirectory),
+                false,
+                `browser profile should be removed after the test: ${profileDirectory}`
+            );
+        } catch (error) {
+            cleanupError ||= error;
+        }
+
+        if (server) {
+            try {
+                await new Promise((resolve, reject) => {
+                    server.close(error => error ? reject(error) : resolve());
+                });
+            } catch (error) {
+                cleanupError ||= error;
+            }
+        }
+    }
+
+    if (testError) {
+        throw testError;
+    }
+    if (cleanupError) {
+        throw cleanupError;
     }
 }
 
