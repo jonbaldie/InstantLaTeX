@@ -146,11 +146,18 @@ body, html {
     padding: 30px;
     min-height: 150px;
     display: flex;
-    justify-content: center;
     align-items: center;
     font-size: 1.2rem;
     overflow-x: auto;
     color: var(--text-color);
+}
+
+/* Centre horizontally with auto margins rather than justify-content: auto margins
+   collapse to zero on overflow, so a wide formula starts at the scroll origin
+   instead of being clipped past the left edge (#26). */
+#math-output > p {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .ad-container {
