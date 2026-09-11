@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:e2e": "node tests/editor-undo.e2e.js",
-    "test:e2e:embed": "node tests/embed-crossorigin.e2e.js"
+    "test:e2e:embed": "node tests/embed-crossorigin.e2e.js",
+    "test:e2e:wide": "node tests/wide-formula.e2e.js"
   },
   "jest": {
     "testMatch": [
