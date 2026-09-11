@@ -146,7 +146,7 @@ body, html {
     padding: 30px;
     min-height: 150px;
     display: flex;
-    justify-content: center;
+    justify-content: safe center;
     align-items: center;
     font-size: 1.2rem;
     overflow-x: auto;
