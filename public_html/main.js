@@ -1,5 +1,103 @@
+function isEscaped(str, index) {
+    let backslashCount = 0;
+    for (let i = index - 1; i >= 0 && str[i] === '\\'; i--) {
+        backslashCount++;
+    }
+    return (backslashCount % 2) === 1;
+}
+
+function hasUnescapedDollar(str) {
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === '$' && !isEscaped(str, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function hasUnescapedDoubleDollar(str) {
+    for (let i = 0; i < str.length - 1; i++) {
+        if (str[i] === '$' && str[i + 1] === '$' && !isEscaped(str, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function hasUnescapedLatexCloser(str, closerChar) {
+    for (let i = 0; i < str.length - 1; i++) {
+        if (str[i] === '\\' && str[i + 1] === closerChar && !isEscaped(str, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function stripDelimiters(TeX) {
+    const trimmed = TeX.trim();
+
+    // LaTeX display delimiters: \[math\]
+    if (trimmed.startsWith('\\[') && trimmed.endsWith('\\]') && trimmed.length >= 4) {
+        if (!isEscaped(trimmed, trimmed.length - 2)) {
+            const inner = trimmed.slice(2, -2);
+            if (!hasUnescapedLatexCloser(inner, ']')) {
+                return inner.trim();
+            }
+        }
+    }
+
+    // LaTeX inline delimiters: \(math\)
+    if (trimmed.startsWith('\\(') && trimmed.endsWith('\\)') && trimmed.length >= 4) {
+        if (!isEscaped(trimmed, trimmed.length - 2)) {
+            const inner = trimmed.slice(2, -2);
+            if (!hasUnescapedLatexCloser(inner, ')')) {
+                return inner.trim();
+            }
+        }
+    }
+
+    // Display dollar delimiters: $$math$$
+    if (trimmed === '$$') {
+        return '';
+    }
+    if (trimmed.startsWith('$$') && trimmed.endsWith('$$') && trimmed.length >= 4) {
+        if (!isEscaped(trimmed, trimmed.length - 2)) {
+            const inner = trimmed.slice(2, -2);
+            if (!hasUnescapedDoubleDollar(inner)) {
+                return inner.trim();
+            }
+        }
+    }
+
+    // Inline dollar delimiters: $math$
+    if (
+        trimmed.startsWith('$') &&
+        !trimmed.startsWith('$$') &&
+        trimmed.endsWith('$') &&
+        !trimmed.endsWith('$$') &&
+        trimmed.length >= 2
+    ) {
+        if (!isEscaped(trimmed, trimmed.length - 1)) {
+            const inner = trimmed.slice(1, -1);
+            if (!hasUnescapedDollar(inner)) {
+                return inner.trim();
+            }
+        }
+    }
+
+    return TeX;
+}
+
 function formatMath(TeX) {
-    return (TeX && TeX !== "\\") ? TeX : "";
+    if (!TeX || typeof TeX !== 'string') {
+        return "";
+    }
+    if (TeX === "\\") {
+        return "";
+    }
+    const stripped = stripDelimiters(TeX);
+    const result = (stripped === "\\") ? "" : stripped;
+    return result;
 }
 
 if (typeof window !== 'undefined') {
