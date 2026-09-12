@@ -101,6 +101,23 @@ body, html {
     }
 }
 
+/* Responsive ads can expand the flex column after loading on narrow screens. */
+@media (max-width: 767px) {
+    .ide-container {
+        max-height: 100vh;
+    }
+
+    .split-pane {
+        display: grid;
+        grid-template-rows: minmax(180px, 1fr) minmax(0, 1fr);
+        min-height: 0;
+    }
+
+    .pane {
+        min-height: 0;
+    }
+}
+
 .pane {
     flex: 1;
     display: flex;
@@ -150,6 +167,12 @@ body, html {
     font-size: 1.2rem;
     overflow-x: auto;
     color: var(--text-color);
+}
+
+@media (max-width: 767px) {
+    #math-output {
+        flex-shrink: 0;
+    }
 }
 
 /* Centre horizontally with auto margins rather than justify-content: auto margins
