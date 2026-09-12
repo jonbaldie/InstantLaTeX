@@ -1,0 +1,4 @@
+[console.error] Failed to load resource: the server responded with a status of 404 (Not Found)
+[console.warn] LaTeX-incompatible input and strict mode is set to 'warn': % comment has no terminating newline; LaTeX would fail because of commenting the end of math mode (e.g. $) [commentAtEnd]
+[console.error] Failed to load resource: net::ERR_INVALID_URL
+[console.error] Failed to load resource: net::ERR_INVALID_URL

@@ -1,0 +1,19 @@
+[
+  "wide run 0 at0 {\"pageOverflowX\":1100,\"docScrollW\":2380,\"innerWidth\":1280,\"editorLeft\":0,\"startText\":\"START\\n+\\n𝑎\\n+\\n𝑎\\n+\\n𝑎\"}",
+  "wide run 0 after page scrollX {\"scrollX\":1100,\"editorLeft\":-1100,\"editorRight\":-480.5,\"headerLeft\":-1080,\"editorOnScreen\":false,\"headerOnScreen\":false}",
+  "wide run 1 at0 {\"pageOverflowX\":1100,\"docScrollW\":2380,\"innerWidth\":1280,\"editorLeft\":0,\"startText\":\"START\\n+\\n𝑎\\n+\\n𝑎\\n+\\n𝑎\"}",
+  "wide run 1 after page scrollX {\"scrollX\":1100,\"editorLeft\":-1100,\"editorRight\":-480.5,\"headerLeft\":-1080,\"editorOnScreen\":false,\"headerOnScreen\":false}",
+  "wide run 2 at0 {\"pageOverflowX\":1100,\"docScrollW\":2380,\"innerWidth\":1280,\"editorLeft\":0,\"startText\":\"START\\n+\\n𝑎\\n+\\n𝑎\\n+\\n𝑎\"}",
+  "wide run 2 after page scrollX {\"scrollX\":1100,\"editorLeft\":-1100,\"editorRight\":-480.5,\"headerLeft\":-1080,\"editorOnScreen\":false,\"headerOnScreen\":false}",
+  "tall run 0 at0 {\"pageOverflowY\":1208,\"mathBottom\":1576.890625,\"innerHeight\":800,\"outputScrollMax\":0,\"paneScrollMax\":0,\"splitScrollMax\":0,\"lastVisible\":false}",
+  "tall run 0 after pane scroll {\"paneScrollTop\":0,\"mathBottom\":1576.890625,\"innerHeight\":800,\"lastOnScreen\":false}",
+  "tall run 0 after page scrollY {\"scrollY\":1208,\"editorTop\":-1114.390625,\"editorBottom\":758.265625,\"editorOnScreen\":true,\"mathBottom\":368.890625,\"lastOnScreen\":true,\"footerOnScreen\":true}",
+  "tall run 1 at0 {\"pageOverflowY\":1208,\"mathBottom\":1576.890625,\"innerHeight\":800,\"outputScrollMax\":0,\"paneScrollMax\":0,\"splitScrollMax\":0,\"lastVisible\":false}",
+  "tall run 1 after pane scroll {\"paneScrollTop\":0,\"mathBottom\":1576.890625,\"innerHeight\":800,\"lastOnScreen\":false}",
+  "tall run 1 after page scrollY {\"scrollY\":1208,\"editorTop\":-1114.390625,\"editorBottom\":758.265625,\"editorOnScreen\":true,\"mathBottom\":368.890625,\"lastOnScreen\":true,\"footerOnScreen\":true}",
+  "tall run 2 at0 {\"pageOverflowY\":1208,\"mathBottom\":1576.890625,\"innerHeight\":800,\"outputScrollMax\":0,\"paneScrollMax\":0,\"splitScrollMax\":0,\"lastVisible\":false}",
+  "tall run 2 after pane scroll {\"paneScrollTop\":0,\"mathBottom\":1576.890625,\"innerHeight\":800,\"lastOnScreen\":false}",
+  "tall run 2 after page scrollY {\"scrollY\":1208,\"editorTop\":-1114.390625,\"editorBottom\":758.265625,\"editorOnScreen\":true,\"mathBottom\":368.890625,\"lastOnScreen\":true,\"footerOnScreen\":true}",
+  "poly at0 {\"pageOverflowX\":1112,\"editorLeft\":0}",
+  "poly after page scrollX {\"scrollX\":1112,\"editorLeft\":-1112,\"editorOnScreen\":false}"
+]
