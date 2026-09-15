@@ -114,10 +114,23 @@ if (typeof window !== 'undefined') {
             const node = document.querySelector("#math-output p");
             if (node) {
                 if (typeof katex !== 'undefined') {
-                    katex.render(arg, node, {
-                        throwOnError: false,
-                        displayMode: true
-                    });
+                    try {
+                        katex.render(arg, node, {
+                            throwOnError: false,
+                            displayMode: true
+                        });
+                    } catch (err) {
+                        // Pathological input (e.g. extreme nesting) can crash the
+                        // renderer with a RangeError, which throwOnError:false does
+                        // not contain (#35). Degrade to the same visible
+                        // invalid-TeX feedback instead of breaking preview and
+                        // hash synchronisation.
+                        const errorSpan = document.createElement('span');
+                        errorSpan.className = 'katex-error';
+                        errorSpan.textContent = arg;
+                        node.textContent = '';
+                        node.appendChild(errorSpan);
+                    }
                 } else {
                     node.textContent = "$$" + arg + "$$";
                 }
