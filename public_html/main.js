@@ -74,13 +74,21 @@ function stripDelimiters(TeX) {
         trimmed.startsWith('$') &&
         !trimmed.startsWith('$$') &&
         trimmed.endsWith('$') &&
-        !trimmed.endsWith('$$') &&
         trimmed.length >= 2
     ) {
-        if (!isEscaped(trimmed, trimmed.length - 1)) {
-            const inner = trimmed.slice(1, -1);
-            if (!hasUnescapedDollar(inner)) {
-                return inner.trim();
+        const lastIndex = trimmed.length - 1;
+        if (!isEscaped(trimmed, lastIndex)) {
+            // A genuine unescaped $$ immediately before the close is ambiguous
+            // with a display-math closer, so leave it untouched. An escaped
+            // \$ right before the close (issue #39) is just content and does
+            // not disqualify the match.
+            const precededByUnescapedDollar =
+                trimmed[lastIndex - 1] === '$' && !isEscaped(trimmed, lastIndex - 1);
+            if (!precededByUnescapedDollar) {
+                const inner = trimmed.slice(1, -1);
+                if (!hasUnescapedDollar(inner)) {
+                    return inner.trim();
+                }
             }
         }
     }
