@@ -1,0 +1,75 @@
+{
+  "results": [
+    {
+      "name": "Hand-typed $\\$$ (Run 1)",
+      "run": 1,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$",
+      "hash": "#%24%5C%24%24"
+    },
+    {
+      "name": "Hand-typed $\\$$ (Run 2)",
+      "run": 2,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$",
+      "hash": "#%24%5C%24%24"
+    },
+    {
+      "name": "Hand-typed $\\$$ (Run 3)",
+      "run": 3,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$",
+      "hash": "#%24%5C%24%24"
+    },
+    {
+      "name": "Pasted $100\\$$ (Run 1)",
+      "run": 1,
+      "editorVal": "$100\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲100\\$$"
+    },
+    {
+      "name": "Pasted $100\\$$ (Run 2)",
+      "run": 2,
+      "editorVal": "$100\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲100\\$$"
+    },
+    {
+      "name": "Pasted $100\\$$ (Run 3)",
+      "run": 3,
+      "editorVal": "$100\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲100\\$$"
+    },
+    {
+      "name": "Hash load $\\$$ (Run 1)",
+      "run": 1,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$"
+    },
+    {
+      "name": "Hash load $\\$$ (Run 2)",
+      "run": 2,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$"
+    },
+    {
+      "name": "Hash load $\\$$ (Run 3)",
+      "run": 3,
+      "editorVal": "$\\$$",
+      "hasError": true,
+      "errorTitle": "ParseError: KaTeX parse error: Can't use function '$' in math mode at position 1: $̲\\$$"
+    }
+  ],
+  "controlRes": {
+    "editorVal": "$100\\$ $",
+    "hasError": false,
+    "htmlSnippet": "<p><span class=\"katex-display\"><span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://ww"
+  }
+}
