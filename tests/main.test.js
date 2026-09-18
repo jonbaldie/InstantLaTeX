@@ -107,5 +107,16 @@ describe('formatMath', () => {
             expect(formatMath('$$\\text{Cost: } \\$100$$')).toBe('\\text{Cost: } \\$100');
             expect(() => katex.renderToString(formatMath('$\\$5$'), renderOpts)).not.toThrow();
         });
+
+        it('strips inline dollar delimiters when the formula ends with an escaped dollar sign (Issue #39)', () => {
+            expect(formatMath('$\\$$')).toBe('\\$');
+            expect(formatMath('$100\\$$')).toBe('100\\$');
+            expect(formatMath('$x\\$$')).toBe('x\\$');
+            expect(formatMath('$\\text{Price: }\\$$')).toBe('\\text{Price: }\\$');
+            expect(() => katex.renderToString(formatMath('$\\$$'), renderOpts)).not.toThrow();
+            expect(() => katex.renderToString(formatMath('$100\\$$'), renderOpts)).not.toThrow();
+            // Still leaves a genuine unescaped $$ close alone (ambiguous / malformed)
+            expect(formatMath('$x$$')).toBe('$x$$');
+        });
     });
 });
