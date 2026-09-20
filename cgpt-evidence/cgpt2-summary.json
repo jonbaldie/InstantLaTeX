@@ -1,0 +1,35 @@
+{
+  "cases": 4364,
+  "exhaustive": 1364,
+  "failures": [],
+  "failureCount": 0,
+  "discardCount": 179,
+  "discards": [
+    {
+      "label": "random",
+      "tex": "\ud800",
+      "reason": "not percent-encodable (lone surrogate)"
+    },
+    {
+      "label": "random",
+      "tex": "$$$$\ud800x$$$$1🙂",
+      "reason": "not percent-encodable (lone surrogate)"
+    },
+    {
+      "label": "random",
+      "tex": "$$$\\$\\alpha\ud800$$$$1\\begin{cases} a \\\\ b \\end{cases}数$$$",
+      "reason": "not percent-encodable (lone surrogate)"
+    },
+    {
+      "label": "random",
+      "tex": "\ud800",
+      "reason": "not percent-encodable (lone surrogate)"
+    },
+    {
+      "label": "random",
+      "tex": "$$$$\\frac{1}{2}\ud800 \ud800\\\\  $$$数$\\%$$$\ud800$$$$$",
+      "reason": "not percent-encodable (lone surrogate)"
+    }
+  ],
+  "corpusSize": 2630
+}
