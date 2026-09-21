@@ -187,7 +187,12 @@
         replaceRange(start, end, replacement, command = 'insertText') {
             if (this.supportsUndoPreservingCommand) {
                 this.lastEditStrategy = 'command';
-                return this._applyRange(start, end, replacement);
+                const changed = this._applyRange(start, end, replacement);
+                if (changed) {
+                    // A successful native command dispatches the browser's input event.
+                    this.signalInputChange();
+                }
+                return changed;
             }
 
             return this.setRangeText(replacement, start, end, 'end', command);
@@ -269,6 +274,13 @@
             }, {});
         }
 
+        /**
+         * Handle one key at the editor seam.
+         *
+         * The controller only decides whether the key is consumed and applies the
+         * edit through the adapter. The caller owns preventDefault() and any
+         * debounced preview or URL synchronization triggered by a true result.
+         */
         handleKeyDown(event, editor) {
             if (!event || !editor || event.ctrlKey || event.metaKey || event.altKey) {
                 return false;
@@ -283,7 +295,9 @@
                 const selectedText = value.slice(start, end);
                 const replacement = key + selectedText + this.pairs[key];
                 if (!editor.replaceRange(start, end, replacement, 'insertText')) {
-                    return false;
+                    // Keep the recognized key consumed when an adapter has no
+                    // mutation primitive, matching the former inline listener.
+                    return true;
                 }
 
                 if (start === end) {
@@ -303,7 +317,7 @@
             if (key === 'Backspace' && start === end && start > 0 &&
                 this.pairs[value[start - 1]] === value[start]) {
                 if (!editor.replaceRange(start - 1, start + 1, '', 'delete')) {
-                    return false;
+                    return true;
                 }
                 editor.setSelectionRange(start - 1, start - 1);
                 return true;

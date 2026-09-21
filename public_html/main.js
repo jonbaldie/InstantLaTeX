@@ -248,6 +248,8 @@ if (typeof window !== 'undefined') {
         });
 
         mathsEditor.addEventListener("keydown", function(e) {
+            // The controller owns key decisions and mutations; the page owns
+            // default-action cancellation and debounced preview/hash sync.
             const handled = bracketController.handleKeyDown(e, textareaAdapter);
             if (handled) {
                 e.preventDefault();

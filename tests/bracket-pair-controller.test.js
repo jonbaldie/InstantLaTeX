@@ -22,6 +22,7 @@ describe('BracketPairController', () => {
         expect(editor.value).toBe('()');
         expect(editor.selectionStart).toBe(1);
         expect(editor.selectionEnd).toBe(1);
+        expect(editor.inputChangeCount).toBe(1);
         expect(editor.undo()).toEqual({ value: '', selectionStart: 0, selectionEnd: 0 });
     });
 
@@ -77,6 +78,37 @@ describe('BracketPairController', () => {
         expect(controller.handleKeyDown(keyEvent('{'), editor)).toBe(true);
         expect(editor.lastEditStrategy).toBe('range');
         expect(editor.value).toBe('{}');
+        expect(editor.selectionStart).toBe(1);
+        expect(editor.selectionEnd).toBe(1);
+        expect(editor.inputChangeCount).toBe(1);
+    });
+
+    it('keeps a recognized edit handled when an adapter cannot mutate', () => {
+        const editor = {
+            value: '()',
+            selectionStart: 1,
+            selectionEnd: 1,
+            getValue() {
+                return this.value;
+            },
+            getSelectionStart() {
+                return this.selectionStart;
+            },
+            getSelectionEnd() {
+                return this.selectionEnd;
+            },
+            replaceRange() {
+                return false;
+            },
+            setSelectionRange(start, end) {
+                this.selectionStart = start;
+                this.selectionEnd = end;
+            }
+        };
+        const controller = new BracketPairController();
+
+        expect(controller.handleKeyDown(keyEvent('('), editor)).toBe(true);
+        expect(editor.value).toBe('()');
         expect(editor.selectionStart).toBe(1);
         expect(editor.selectionEnd).toBe(1);
     });
