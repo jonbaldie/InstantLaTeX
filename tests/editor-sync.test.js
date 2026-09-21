@@ -134,7 +134,7 @@ function createBrowserHarness(initialHash = '', initialEditorValue = 'x') {
     };
 }
 
-function dispatchEditorKey(mathsEditor, key, modifiers = {}) {
+function dispatchKeyDown(mathsEditor, key, modifiers = {}) {
     const event = {
         type: 'keydown',
         key,
@@ -148,23 +148,7 @@ function dispatchEditorKey(mathsEditor, key, modifiers = {}) {
             this.defaultPrevented = true;
         }
     };
-    const shouldApplyNativeAction = mathsEditor.dispatchEvent(event);
-
-    if (shouldApplyNativeAction && !event.ctrlKey && !event.altKey && !event.metaKey) {
-        const start = mathsEditor.selectionStart;
-        const end = mathsEditor.selectionEnd;
-
-        if (key === 'Backspace' && start === end && start > 0) {
-            mathsEditor.value = mathsEditor.value.slice(0, start - 1) + mathsEditor.value.slice(end);
-            mathsEditor.selectionStart = mathsEditor.selectionEnd = start - 1;
-        } else {
-            mathsEditor.value = mathsEditor.value.slice(0, start) + key + mathsEditor.value.slice(end);
-            mathsEditor.selectionStart = mathsEditor.selectionEnd = start + key.length;
-        }
-
-        mathsEditor.dispatchEvent({ type: 'input' });
-    }
-
+    mathsEditor.dispatchEvent(event);
     return event;
 }
 
@@ -188,12 +172,9 @@ describe('editor synchronization', () => {
         const { mathsEditor } = activeHarness;
 
         for (const [opener, closer] of [['(', ')'], ['[', ']'], ['{', '}']]) {
-            mathsEditor.value = '';
-            mathsEditor.selectionStart = mathsEditor.selectionEnd = 0;
-
-            dispatchEditorKey(mathsEditor, opener);
-            dispatchEditorKey(mathsEditor, 'x');
-            const closerEvent = dispatchEditorKey(mathsEditor, closer);
+            mathsEditor.value = `${opener}x${closer}`;
+            mathsEditor.selectionStart = mathsEditor.selectionEnd = 2;
+            const closerEvent = dispatchKeyDown(mathsEditor, closer);
 
             expect(closerEvent.defaultPrevented).toBe(true);
             expect(mathsEditor.value).toBe(`${opener}x${closer}`);
@@ -201,11 +182,11 @@ describe('editor synchronization', () => {
             expect(mathsEditor.selectionEnd).toBe(3);
         }
 
-        mathsEditor.value = '';
-        mathsEditor.selectionStart = mathsEditor.selectionEnd = 0;
-        dispatchEditorKey(mathsEditor, '(');
-        dispatchEditorKey(mathsEditor, ']');
+        mathsEditor.value = '(])';
+        mathsEditor.selectionStart = mathsEditor.selectionEnd = 2;
+        const mismatchedCloserEvent = dispatchKeyDown(mathsEditor, ']');
 
+        expect(mismatchedCloserEvent.defaultPrevented).toBe(false);
         expect(mathsEditor.value).toBe('(])');
         expect(mathsEditor.selectionStart).toBe(2);
         expect(mathsEditor.selectionEnd).toBe(2);
@@ -216,11 +197,11 @@ describe('editor synchronization', () => {
         const { mathsEditor } = activeHarness;
 
         for (const opener of ['(', '[', '{']) {
-            mathsEditor.value = '';
-            mathsEditor.selectionStart = mathsEditor.selectionEnd = 0;
+            const closer = { '(': ')', '[': ']', '{': '}' }[opener];
+            mathsEditor.value = `${opener}${closer}`;
+            mathsEditor.selectionStart = mathsEditor.selectionEnd = 1;
 
-            dispatchEditorKey(mathsEditor, opener);
-            const backspaceEvent = dispatchEditorKey(mathsEditor, 'Backspace');
+            const backspaceEvent = dispatchKeyDown(mathsEditor, 'Backspace');
 
             expect(backspaceEvent.defaultPrevented).toBe(true);
             expect(mathsEditor.value).toBe('');
@@ -235,7 +216,7 @@ describe('editor synchronization', () => {
         mathsEditor.selectionStart = 0;
         mathsEditor.selectionEnd = 3;
 
-        const openerEvent = dispatchEditorKey(mathsEditor, '(');
+        const openerEvent = dispatchKeyDown(mathsEditor, '(');
 
         expect(openerEvent.defaultPrevented).toBe(true);
         expect(mathsEditor.value).toBe('(abc)');
@@ -252,7 +233,7 @@ describe('editor synchronization', () => {
                 mathsEditor.value = 'X';
                 mathsEditor.selectionStart = mathsEditor.selectionEnd = 1;
 
-                const event = dispatchEditorKey(mathsEditor, opener, { [modifier]: true });
+                const event = dispatchKeyDown(mathsEditor, opener, { [modifier]: true });
 
                 expect(event.defaultPrevented).toBe(false);
                 expect(mathsEditor.value).toBe('X');
@@ -272,7 +253,7 @@ describe('editor synchronization', () => {
             mathsEditor.value = '';
             mathsEditor.selectionStart = mathsEditor.selectionEnd = 0;
 
-            const event = dispatchEditorKey(mathsEditor, opener, { shiftKey: true });
+            const event = dispatchKeyDown(mathsEditor, opener, { shiftKey: true });
 
             expect(event.defaultPrevented).toBe(true);
             expect(mathsEditor.value).toBe(`${opener}${closer}`);
@@ -285,9 +266,11 @@ describe('editor synchronization', () => {
         activeHarness = createBrowserHarness('', '');
         const { mathsEditor, output, parent } = activeHarness;
 
-        dispatchEditorKey(mathsEditor, '(');
-        dispatchEditorKey(mathsEditor, 'x');
-        dispatchEditorKey(mathsEditor, ')');
+        dispatchKeyDown(mathsEditor, '(');
+        mathsEditor.value = '(x)';
+        mathsEditor.selectionStart = mathsEditor.selectionEnd = 2;
+        mathsEditor.dispatchEvent({ type: 'input' });
+        dispatchKeyDown(mathsEditor, ')');
         jest.advanceTimersByTime(300);
 
         expect(mathsEditor.value).toBe('(x)');

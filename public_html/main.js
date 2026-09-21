@@ -237,82 +237,22 @@ if (typeof window !== 'undefined') {
             }, 300);
         };
 
+        const bracketPairModule = window.BracketPairController ||
+            (typeof module !== 'undefined' && module.exports ?
+                require('./bracket-pair-controller.js') : null);
+        const bracketController = new bracketPairModule.BracketPairController();
+        const textareaAdapter = new bracketPairModule.DomTextareaAdapter(mathsEditor, document);
+
         ['change', 'keyup', 'paste', 'mouseup', 'input'].forEach(evt => {
             mathsEditor.addEventListener(evt, updateHandler);
         });
 
         mathsEditor.addEventListener("keydown", function(e) {
-            // Leave browser, OS, and editor shortcuts untouched.
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-            const pairs = {
-                '(': ')',
-                '[': ']',
-                '{': '}'
-            };
-            const closingPairs = {
-                ')': '(',
-                ']': '[',
-                '}': '{'
-            };
-            const start = this.selectionStart;
-            const end = this.selectionEnd;
-            const val = this.value;
-
-            const applyEditorEdit = (command, replacement, editStart, editEnd) => {
-                this.setSelectionRange(editStart, editEnd);
-                const previousValue = this.value;
-
-                try {
-                    if (typeof document.execCommand === 'function') {
-                        document.execCommand(command, false, replacement);
-                        if (this.value !== previousValue) {
-                            return true;
-                        }
-                    }
-                } catch (err) {
-                    // Fall back to the textarea range API when the native command is unavailable.
-                }
-
-                if (typeof this.setRangeText === 'function') {
-                    this.setRangeText(replacement, editStart, editEnd, 'end');
-                    this.dispatchEvent(new Event('input', { bubbles: true }));
-                    return this.value !== previousValue;
-                }
-
-                return false;
-            };
-
-            if (pairs[e.key]) {
+            // The controller owns key decisions and mutations; the page owns
+            // default-action cancellation and debounced preview/hash sync.
+            const handled = bracketController.handleKeyDown(e, textareaAdapter);
+            if (handled) {
                 e.preventDefault();
-                const selectedText = val.substring(start, end);
-                const insertStr = e.key + selectedText + pairs[e.key];
-
-                if (applyEditorEdit('insertText', insertStr, start, end)) {
-                    if (start === end) {
-                        this.selectionStart = this.selectionEnd = start + 1;
-                    } else {
-                        this.selectionStart = start + 1;
-                        this.selectionEnd = end + 1;
-                    }
-                }
-
-                updateHandler();
-                return;
-            }
-
-            if (closingPairs[e.key] && start === end && val[start] === e.key) {
-                e.preventDefault();
-                this.selectionStart = this.selectionEnd = start + 1;
-                updateHandler();
-                return;
-            }
-
-            if (e.key === 'Backspace' && start === end && start > 0 && pairs[val[start - 1]] === val[start]) {
-                e.preventDefault();
-                if (applyEditorEdit('delete', '', start - 1, start + 1)) {
-                    this.selectionStart = this.selectionEnd = start - 1;
-                }
                 updateHandler();
             }
         });
