@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  pull_request:
+    branches: ["master"]
+  push:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test -- --maxWorkers=2
+      - name: Run editor E2E tests
+        run: npm run test:e2e
+      - name: Run embed E2E tests
+        run: npm run test:e2e:embed
+      - name: Run layout E2E tests
+        run: npm run test:e2e:layout
+      - name: Run nested overflow E2E tests
+        run: npm run test:e2e:nested
+      - name: Run wide formula E2E tests
+        run: npm run test:e2e:wide
