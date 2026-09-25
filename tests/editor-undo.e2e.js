@@ -1,91 +1,8 @@
 const assert = require('node:assert/strict');
-const { execFileSync } = require('node:child_process');
-const fs = require('node:fs');
-const http = require('node:http');
-const path = require('node:path');
-const puppeteer = require('puppeteer-core');
+const { withBrowserTest } = require('./support/browser-test-harness');
 
-const publicDirectory = path.join(__dirname, '..', 'public_html');
 const initialValue = String.raw`\frac{-b\pm\sqrt{b^2-4ac}}{2a}`;
 const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-
-function findChrome() {
-    const candidates = [
-        process.env.CHROME_PATH,
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        'google-chrome',
-        'chromium',
-        'chromium-browser'
-    ].filter(Boolean);
-
-    for (const candidate of candidates) {
-        if (path.isAbsolute(candidate)) {
-            if (fs.existsSync(candidate)) {
-                return candidate;
-            }
-            continue;
-        }
-
-        try {
-            return execFileSync('which', [candidate], { encoding: 'utf8' }).trim();
-        } catch (error) {
-            // Try the next browser name.
-        }
-    }
-
-    throw new Error('A Chrome or Chromium executable is required for the editor undo regression test');
-}
-
-function contentType(filePath) {
-    return {
-        '.css': 'text/css',
-        '.html': 'text/html',
-        '.js': 'text/javascript'
-    }[path.extname(filePath)] || 'application/octet-stream';
-}
-
-function startServer() {
-    const server = http.createServer((request, response) => {
-        let requestPath;
-        try {
-            requestPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-        } catch (error) {
-            response.writeHead(400);
-            response.end();
-            return;
-        }
-
-        const relativePath = requestPath === '/' ? '/index.html' : requestPath;
-        const filePath = path.resolve(publicDirectory, `.${relativePath}`);
-        if (!filePath.startsWith(`${publicDirectory}${path.sep}`)) {
-            response.writeHead(403);
-            response.end();
-            return;
-        }
-
-        fs.readFile(filePath, (error, contents) => {
-            if (error) {
-                response.writeHead(error.code === 'ENOENT' ? 404 : 500);
-                response.end();
-                return;
-            }
-
-            response.writeHead(200, { 'Content-Type': contentType(filePath) });
-            response.end(contents);
-        });
-    });
-
-    return new Promise((resolve, reject) => {
-        server.once('error', reject);
-        server.listen(0, '127.0.0.1', () => {
-            server.removeListener('error', reject);
-            resolve({
-                server,
-                url: `http://127.0.0.1:${server.address().port}/index.html`
-            });
-        });
-    });
-}
 
 async function waitForSynchronizedValue(page, expectedValue) {
     await page.waitForFunction(expected => {
@@ -152,23 +69,7 @@ async function assertSynchronized(page, expectedValue) {
 }
 
 async function run() {
-    const profileDirectory = fs.mkdtempSync(path.join('/tmp', 'instantlatex-issue-15-e2e-'));
-    let server;
-    let browser;
-    let testError;
-    let cleanupError;
-
-    try {
-        const startedServer = await startServer();
-        server = startedServer.server;
-        const { url } = startedServer;
-        browser = await puppeteer.launch({
-            executablePath: findChrome(),
-            headless: 'new',
-            userDataDir: profileDirectory,
-            args: ['--no-first-run', '--disable-extensions']
-        });
-        const page = await browser.newPage();
+    await withBrowserTest({}, async ({ page, serverUrl: url }) => {
         const pageErrors = [];
         page.on('pageerror', error => pageErrors.push(error.message));
 
@@ -217,45 +118,7 @@ async function run() {
 
         assert.deepEqual(pageErrors, []);
         console.log('editor undo/redo regression scenarios passed');
-    } catch (error) {
-        testError = error;
-    } finally {
-        try {
-            if (browser) {
-                await browser.close();
-            }
-        } catch (error) {
-            cleanupError = error;
-        }
-
-        try {
-            fs.rmSync(profileDirectory, { recursive: true, force: true });
-            assert.equal(
-                fs.existsSync(profileDirectory),
-                false,
-                `browser profile should be removed after the test: ${profileDirectory}`
-            );
-        } catch (error) {
-            cleanupError ||= error;
-        }
-
-        if (server) {
-            try {
-                await new Promise((resolve, reject) => {
-                    server.close(error => error ? reject(error) : resolve());
-                });
-            } catch (error) {
-                cleanupError ||= error;
-            }
-        }
-    }
-
-    if (testError) {
-        throw testError;
-    }
-    if (cleanupError) {
-        throw cleanupError;
-    }
+    });
 }
 
 run().catch(error => {
