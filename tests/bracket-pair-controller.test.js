@@ -122,4 +122,41 @@ describe('BracketPairController', () => {
         expect(editor.selectionStart).toBe(1);
         expect(editor.selectionEnd).toBe(1);
     });
+
+    it('does not consume Backspace for non-bracket characters at the end of input', () => {
+        const controller = new BracketPairController();
+
+        for (const char of ['x', '1', '.', ']', ')', '}']) {
+            const editor = new SimulatedEditorAdapter(char, 1, 1);
+            expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
+            expect(editor.value).toBe(char);
+            expect(editor.selectionStart).toBe(1);
+            expect(editor.selectionEnd).toBe(1);
+        }
+    });
+
+    it('does not consume Backspace for an unclosed opening bracket at the end of input', () => {
+        const controller = new BracketPairController();
+
+        for (const opener of ['(', '[', '{']) {
+            const editor = new SimulatedEditorAdapter(opener, 1, 1);
+            expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
+            expect(editor.value).toBe(opener);
+            expect(editor.selectionStart).toBe(1);
+            expect(editor.selectionEnd).toBe(1);
+        }
+    });
+
+    it('does not consume Backspace for Unicode surrogate pair characters at the end of input', () => {
+        const controller = new BracketPairController();
+        const piSymbol = '\uD835\uDEE1';
+        const editor = new SimulatedEditorAdapter(piSymbol, 2, 2, {
+            supportsUndoPreservingCommand: false
+        });
+
+        expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
+        expect(editor.value).toBe(piSymbol);
+        expect(editor.selectionStart).toBe(2);
+        expect(editor.selectionEnd).toBe(2);
+    });
 });
