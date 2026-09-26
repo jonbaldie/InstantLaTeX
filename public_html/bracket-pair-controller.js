@@ -315,6 +315,8 @@
             }
 
             if (key === 'Backspace' && start === end && start > 0 &&
+                start < value.length &&
+                Object.prototype.hasOwnProperty.call(this.pairs, value[start - 1]) &&
                 this.pairs[value[start - 1]] === value[start]) {
                 if (!editor.replaceRange(start - 1, start + 1, '', 'delete')) {
                     return true;
