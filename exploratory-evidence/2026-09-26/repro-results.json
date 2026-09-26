@@ -1,0 +1,135 @@
+{
+  "unitResults": [
+    {
+      "run": 1,
+      "handledLetter": true,
+      "valueAfterLetter": "",
+      "handledOpener": false,
+      "valueAfterOpener": "(",
+      "handledCloser": true,
+      "valueAfterCloser": "",
+      "handledSurrogate": true,
+      "valueAfterSurrogate": "\ud835",
+      "charCodesSurrogate": [
+        "d835"
+      ]
+    },
+    {
+      "run": 2,
+      "handledLetter": true,
+      "valueAfterLetter": "",
+      "handledOpener": false,
+      "valueAfterOpener": "(",
+      "handledCloser": true,
+      "valueAfterCloser": "",
+      "handledSurrogate": true,
+      "valueAfterSurrogate": "\ud835",
+      "charCodesSurrogate": [
+        "d835"
+      ]
+    },
+    {
+      "run": 3,
+      "handledLetter": true,
+      "valueAfterLetter": "",
+      "handledOpener": false,
+      "valueAfterOpener": "(",
+      "handledCloser": true,
+      "valueAfterCloser": "",
+      "handledSurrogate": true,
+      "valueAfterSurrogate": "\ud835",
+      "charCodesSurrogate": [
+        "d835"
+      ]
+    }
+  ],
+  "browserResults": [
+    {
+      "run": 1,
+      "letterEvent": {
+        "defaultPrevented": true,
+        "valueAfter": "ab",
+        "caretAfter": 2
+      },
+      "controlMiddleEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "abc",
+        "caretAfter": 2
+      },
+      "openerEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "a(",
+        "caretAfter": 2
+      },
+      "surrogateResult": {
+        "defaultPrevented": true,
+        "editorValue": "\ud835",
+        "editorLength": 1,
+        "charCodes": [
+          "d835"
+        ],
+        "hasError": true,
+        "renderedText": "\ud835",
+        "locationHash": ""
+      }
+    },
+    {
+      "run": 2,
+      "letterEvent": {
+        "defaultPrevented": true,
+        "valueAfter": "ab",
+        "caretAfter": 2
+      },
+      "controlMiddleEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "abc",
+        "caretAfter": 2
+      },
+      "openerEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "a(",
+        "caretAfter": 2
+      },
+      "surrogateResult": {
+        "defaultPrevented": true,
+        "editorValue": "\ud835",
+        "editorLength": 1,
+        "charCodes": [
+          "d835"
+        ],
+        "hasError": true,
+        "renderedText": "\ud835",
+        "locationHash": ""
+      }
+    },
+    {
+      "run": 3,
+      "letterEvent": {
+        "defaultPrevented": true,
+        "valueAfter": "ab",
+        "caretAfter": 2
+      },
+      "controlMiddleEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "abc",
+        "caretAfter": 2
+      },
+      "openerEvent": {
+        "defaultPrevented": false,
+        "valueAfter": "a(",
+        "caretAfter": 2
+      },
+      "surrogateResult": {
+        "defaultPrevented": true,
+        "editorValue": "\ud835",
+        "editorLength": 1,
+        "charCodes": [
+          "d835"
+        ],
+        "hasError": true,
+        "renderedText": "\ud835",
+        "locationHash": ""
+      }
+    }
+  ]
+}
