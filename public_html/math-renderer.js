@@ -142,8 +142,8 @@
     // on every render because the page loads KaTeX after this script.
     function createMathRenderer({ getEngine = getGlobalKatex } = {}) {
         return {
-            render(TeX, node) {
-                const tex = formatMath(TeX);
+            render(rawTeX, node) {
+                const tex = formatMath(rawTeX);
                 const engine = getEngine();
 
                 if (!engine) {
@@ -152,7 +152,7 @@
                 }
 
                 try {
-                    engine.render(tex, node, { ...renderOptions });
+                    engine.render(tex, node, renderOptions);
                 } catch (error) {
                     // Pathological input (e.g. extreme nesting) can crash the
                     // renderer with a RangeError, which throwOnError:false does
@@ -165,7 +165,7 @@
 
                 // With throwOnError:false, KaTeX reports parse errors by
                 // rendering a .katex-error element instead of throwing.
-                const status = node.querySelector && node.querySelector('.katex-error') ?
+                const status = node.querySelector('.katex-error') ?
                     'invalid-tex' : 'rendered';
                 return { status, tex };
             }
