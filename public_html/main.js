@@ -1,112 +1,6 @@
-function isEscaped(str, index) {
-    let backslashCount = 0;
-    for (let i = index - 1; i >= 0 && str[i] === '\\'; i--) {
-        backslashCount++;
-    }
-    return (backslashCount % 2) === 1;
-}
-
-function hasUnescapedDollar(str) {
-    for (let i = 0; i < str.length; i++) {
-        if (str[i] === '$' && !isEscaped(str, i)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function hasUnescapedDoubleDollar(str) {
-    for (let i = 0; i < str.length - 1; i++) {
-        if (str[i] === '$' && str[i + 1] === '$' && !isEscaped(str, i)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function hasUnescapedLatexCloser(str, closerChar) {
-    for (let i = 0; i < str.length - 1; i++) {
-        if (str[i] === '\\' && str[i + 1] === closerChar && !isEscaped(str, i)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function stripDelimiters(TeX) {
-    const trimmed = TeX.trim();
-
-    // LaTeX display delimiters: \[math\]
-    if (trimmed.startsWith('\\[') && trimmed.endsWith('\\]') && trimmed.length >= 4) {
-        if (!isEscaped(trimmed, trimmed.length - 2)) {
-            const inner = trimmed.slice(2, -2);
-            if (!hasUnescapedLatexCloser(inner, ']')) {
-                return inner.trim();
-            }
-        }
-    }
-
-    // LaTeX inline delimiters: \(math\)
-    if (trimmed.startsWith('\\(') && trimmed.endsWith('\\)') && trimmed.length >= 4) {
-        if (!isEscaped(trimmed, trimmed.length - 2)) {
-            const inner = trimmed.slice(2, -2);
-            if (!hasUnescapedLatexCloser(inner, ')')) {
-                return inner.trim();
-            }
-        }
-    }
-
-    // Display dollar delimiters: $$math$$
-    if (trimmed === '$$') {
-        return '';
-    }
-    if (trimmed.startsWith('$$') && trimmed.endsWith('$$') && trimmed.length >= 4) {
-        if (!isEscaped(trimmed, trimmed.length - 2)) {
-            const inner = trimmed.slice(2, -2);
-            if (!hasUnescapedDoubleDollar(inner)) {
-                return inner.trim();
-            }
-        }
-    }
-
-    // Inline dollar delimiters: $math$
-    if (
-        trimmed.startsWith('$') &&
-        !trimmed.startsWith('$$') &&
-        trimmed.endsWith('$') &&
-        trimmed.length >= 2
-    ) {
-        const lastIndex = trimmed.length - 1;
-        if (!isEscaped(trimmed, lastIndex)) {
-            // A genuine unescaped $$ immediately before the close is ambiguous
-            // with a display-math closer, so leave it untouched. An escaped
-            // \$ right before the close (issue #39) is just content and does
-            // not disqualify the match.
-            const precededByUnescapedDollar =
-                trimmed[lastIndex - 1] === '$' && !isEscaped(trimmed, lastIndex - 1);
-            if (!precededByUnescapedDollar) {
-                const inner = trimmed.slice(1, -1);
-                if (!hasUnescapedDollar(inner)) {
-                    return inner.trim();
-                }
-            }
-        }
-    }
-
-    return TeX;
-}
-
-function formatMath(TeX) {
-    if (!TeX || typeof TeX !== 'string') {
-        return "";
-    }
-    if (TeX === "\\") {
-        return "";
-    }
-    const stripped = stripDelimiters(TeX);
-    const result = (stripped === "\\") ? "" : stripped;
-    return result;
-}
+const mathRendererModule = (typeof window !== 'undefined' && window.MathRenderer) ||
+    (typeof module !== 'undefined' && module.exports ?
+        require('./math-renderer.js') : null);
 
 if (typeof window !== 'undefined') {
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -117,31 +11,12 @@ if (typeof window !== 'undefined') {
     ga('send', 'pageview');
 
     (function (w) {
+        const mathRenderer = mathRendererModule.createMathRenderer();
+
         w.UpdateMath = function (TeX) {
-            const arg = formatMath(TeX);
             const node = document.querySelector("#math-output p");
             if (node) {
-                if (typeof katex !== 'undefined') {
-                    try {
-                        katex.render(arg, node, {
-                            throwOnError: false,
-                            displayMode: true
-                        });
-                    } catch (err) {
-                        // Pathological input (e.g. extreme nesting) can crash the
-                        // renderer with a RangeError, which throwOnError:false does
-                        // not contain (#35). Degrade to the same visible
-                        // invalid-TeX feedback instead of breaking preview and
-                        // hash synchronisation.
-                        const errorSpan = document.createElement('span');
-                        errorSpan.className = 'katex-error';
-                        errorSpan.textContent = arg;
-                        node.textContent = '';
-                        node.appendChild(errorSpan);
-                    }
-                } else {
-                    node.textContent = "$$" + arg + "$$";
-                }
+                mathRenderer.render(TeX, node);
             }
         }
     })(window);
@@ -325,5 +200,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { formatMath };
+    module.exports = { formatMath: mathRendererModule.formatMath };
 }

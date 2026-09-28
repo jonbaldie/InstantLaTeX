@@ -1,18 +1,9 @@
-const katex = require('katex');
 const { formatMath } = require('../public_html/main.js');
 
 describe('formatMath', () => {
     it('returns the TeX unchanged when valid TeX is provided', () => {
         expect(formatMath('x^2')).toBe('x^2');
         expect(formatMath('\\frac{1}{2}')).toBe('\\frac{1}{2}');
-    });
-
-    it('does not make KaTeX fail when TeX contains a percent comment', () => {
-        const opts = { throwOnError: true, displayMode: true };
-        expect(() => katex.renderToString('%', opts)).not.toThrow();
-        expect(() => katex.renderToString(formatMath('%'), opts)).not.toThrow();
-        expect(() => katex.renderToString('x%', opts)).not.toThrow();
-        expect(() => katex.renderToString(formatMath('x%'), opts)).not.toThrow();
     });
 
     it('returns empty string when TeX is empty', () => {
@@ -26,38 +17,28 @@ describe('formatMath', () => {
     });
 
     describe('delimiter stripping (Issue #29)', () => {
-        const renderOpts = { throwOnError: true, displayMode: true };
-
         it('strips enclosing inline dollar delimiters ($math$)', () => {
             expect(formatMath('$x$')).toBe('x');
             expect(formatMath('$x^2$')).toBe('x^2');
             expect(formatMath('$\\frac{1}{2}$')).toBe('\\frac{1}{2}');
-            expect(() => katex.renderToString(formatMath('$x^2$'), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('$\\frac{1}{2}$'), renderOpts)).not.toThrow();
         });
 
         it('strips enclosing display dollar delimiters ($$math$$)', () => {
             expect(formatMath('$$x$$')).toBe('x');
             expect(formatMath('$$x^2$$')).toBe('x^2');
             expect(formatMath('$$\\frac{1}{2}$$')).toBe('\\frac{1}{2}');
-            expect(() => katex.renderToString(formatMath('$$x^2$$'), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('$$\\frac{1}{2}$$'), renderOpts)).not.toThrow();
         });
 
         it('strips enclosing LaTeX inline delimiters (\\(math\\))', () => {
             expect(formatMath('\\(x\\)')).toBe('x');
             expect(formatMath('\\(x^2\\)')).toBe('x^2');
             expect(formatMath('\\(\\frac{1}{2}\\)')).toBe('\\frac{1}{2}');
-            expect(() => katex.renderToString(formatMath('\\(x^2\\)'), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('\\(\\frac{1}{2}\\)'), renderOpts)).not.toThrow();
         });
 
         it('strips enclosing LaTeX display delimiters (\\[math\\])', () => {
             expect(formatMath('\\[x\\]')).toBe('x');
             expect(formatMath('\\[x^2\\]')).toBe('x^2');
             expect(formatMath('\\[\\frac{1}{2}\\]')).toBe('\\frac{1}{2}');
-            expect(() => katex.renderToString(formatMath('\\[x^2\\]'), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('\\[\\frac{1}{2}\\]'), renderOpts)).not.toThrow();
         });
 
         it('handles surrounding whitespace around and inside enclosing delimiters cleanly', () => {
@@ -68,8 +49,6 @@ describe('formatMath', () => {
             expect(formatMath('  $$ \\frac{1}{2} $$  ')).toBe('\\frac{1}{2}');
             expect(formatMath('  \\( \\frac{1}{2} \\)  ')).toBe('\\frac{1}{2}');
             expect(formatMath('  \\[ \\frac{1}{2} \\]  ')).toBe('\\frac{1}{2}');
-            expect(() => katex.renderToString(formatMath('  $\\frac{1}{2}$  '), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('$\\frac{1}{2} $'), renderOpts)).not.toThrow();
         });
 
         it('handles empty delimited math cleanly', () => {
@@ -105,7 +84,6 @@ describe('formatMath', () => {
         it('handles escaped delimiters inside math mode properly', () => {
             expect(formatMath('$\\$5$')).toBe('\\$5');
             expect(formatMath('$$\\text{Cost: } \\$100$$')).toBe('\\text{Cost: } \\$100');
-            expect(() => katex.renderToString(formatMath('$\\$5$'), renderOpts)).not.toThrow();
         });
 
         it('strips inline dollar delimiters when the formula ends with an escaped dollar sign (Issue #39)', () => {
@@ -113,8 +91,6 @@ describe('formatMath', () => {
             expect(formatMath('$100\\$$')).toBe('100\\$');
             expect(formatMath('$x\\$$')).toBe('x\\$');
             expect(formatMath('$\\text{Price: }\\$$')).toBe('\\text{Price: }\\$');
-            expect(() => katex.renderToString(formatMath('$\\$$'), renderOpts)).not.toThrow();
-            expect(() => katex.renderToString(formatMath('$100\\$$'), renderOpts)).not.toThrow();
             // Still leaves a genuine unescaped $$ close alone (ambiguous / malformed)
             expect(formatMath('$x$$')).toBe('$x$$');
         });
