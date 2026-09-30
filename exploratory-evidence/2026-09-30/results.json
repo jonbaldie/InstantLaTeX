@@ -1,0 +1,98 @@
+[
+  {
+    "scenario": "blocked-auto-render",
+    "runIndex": 1,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "blocked-auto-render-run1.png"
+  },
+  {
+    "scenario": "blocked-auto-render",
+    "runIndex": 2,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "blocked-auto-render-run2.png"
+  },
+  {
+    "scenario": "blocked-auto-render",
+    "runIndex": 3,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "blocked-auto-render-run3.png"
+  },
+  {
+    "scenario": "offline-cdn",
+    "runIndex": 1,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "$$\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$$",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "offline-cdn-run1.png"
+  },
+  {
+    "scenario": "offline-cdn",
+    "runIndex": 2,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "$$\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$$",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "offline-cdn-run2.png"
+  },
+  {
+    "scenario": "offline-cdn",
+    "runIndex": 3,
+    "pageErrors": [
+      "renderMathInElement is not defined"
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "outputText": "$$\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$$",
+    "editorValue": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "screenshot": "offline-cdn-run3.png"
+  },
+  {
+    "scenario": "control-online",
+    "runIndex": 1,
+    "pageErrors": [],
+    "screenshot": "control-online.png"
+  }
+]

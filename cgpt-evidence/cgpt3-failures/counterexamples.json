@@ -1,0 +1,127 @@
+[
+  {
+    "initialState": {
+      "value": "y{ $[[]]",
+      "start": 6,
+      "end": 7
+    },
+    "sequence": [
+      {
+        "key": "]",
+        "modifiers": []
+      },
+      {
+        "key": "]",
+        "modifiers": []
+      },
+      {
+        "key": "Dead",
+        "modifiers": []
+      },
+      {
+        "key": "Backspace",
+        "modifiers": []
+      },
+      {
+        "key": "(",
+        "modifiers": []
+      },
+      {
+        "key": "Delete",
+        "modifiers": [
+          "altKey"
+        ]
+      }
+    ],
+    "status": "fail",
+    "data": {
+      "loop": "A",
+      "type": "spec-violation",
+      "strategy": "command",
+      "violation": {
+        "index": 3,
+        "kind": "handled-flag"
+      },
+      "initialState": {
+        "value": "y{ $[[]]",
+        "start": 6,
+        "end": 7
+      },
+      "sequence": [
+        {
+          "key": "]",
+          "modifiers": []
+        },
+        {
+          "key": "]",
+          "modifiers": []
+        },
+        {
+          "key": "Dead",
+          "modifiers": []
+        },
+        {
+          "key": "Backspace",
+          "modifiers": []
+        },
+        {
+          "key": "(",
+          "modifiers": []
+        },
+        {
+          "key": "Delete",
+          "modifiers": [
+            "altKey"
+          ]
+        }
+      ],
+      "transcriptTail": [
+        {
+          "index": 1,
+          "step": {
+            "key": "]",
+            "modifiers": []
+          },
+          "handled": true,
+          "state": {
+            "value": "y{ $[[]]",
+            "start": 8,
+            "end": 8
+          }
+        },
+        {
+          "index": 2,
+          "step": {
+            "key": "Dead",
+            "modifiers": []
+          },
+          "handled": false,
+          "state": {
+            "value": "y{ $[[]]",
+            "start": 8,
+            "end": 8
+          }
+        },
+        {
+          "index": 3,
+          "step": {
+            "key": "Backspace",
+            "modifiers": []
+          },
+          "handled": false,
+          "expectedHandled": true,
+          "stateBefore": {
+            "value": "y{ $[[]]",
+            "start": 8,
+            "end": 8
+          },
+          "stateAfter": {
+            "value": "y{ $[[]]",
+            "start": 8,
+            "end": 8
+          }
+        }
+      ]
+    }
+  }
+]
