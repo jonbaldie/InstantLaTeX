@@ -26,6 +26,8 @@ jobs:
         run: npm test -- --maxWorkers=2
       - name: Run editor E2E tests
         run: npm run test:e2e
+      - name: Run page bootstrap E2E tests
+        run: npm run test:e2e:bootstrap
       - name: Run embed E2E tests
         run: npm run test:e2e:embed
       - name: Run layout E2E tests
