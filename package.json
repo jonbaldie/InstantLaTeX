@@ -23,6 +23,7 @@
   "type": "commonjs",
   "devDependencies": {
     "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.5.2",
     "jsdom": "^30.0.1",
     "katex": "^0.16.9",
     "puppeteer-core": "^25.10.0"
