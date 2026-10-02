@@ -50,7 +50,7 @@ function selectionOf(editor) {
 describe.each([
     ['DomTextareaAdapter (jsdom textarea)', createDomTextareaAdapter],
     ['SimulatedEditorAdapter', createSimulatedEditorAdapter]
-])('editor adapter contract: %s', (name, createAdapter) => {
+])('editor adapter contract: %s', (_name, createAdapter) => {
     it('reports its value and selection', () => {
         const { editor, inputCount } = createAdapter('abc', 1, 2);
 
@@ -115,11 +115,8 @@ describe('DomTextareaAdapter', () => {
     });
 
     it('makes exactly one input notification when the native command performs the edit', () => {
-        const textarea = createTextarea('ab', 1, 1);
-        let inputCount = 0;
-        textarea.addEventListener('input', () => {
-            inputCount += 1;
-        });
+        const { editor, inputCount } = createDomTextareaAdapter('ab', 1, 1);
+        const textarea = editor.textarea;
         // Stand in for a browser's execCommand, which edits the focused
         // textarea and dispatches its own input event.
         document.execCommand = jest.fn((command, showUi, text) => {
@@ -127,14 +124,13 @@ describe('DomTextareaAdapter', () => {
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             return true;
         });
-        const editor = new DomTextareaAdapter(textarea, document);
 
         expect(editor.replaceRange(1, 1, '()', 'insertText')).toBe(true);
 
         expect(document.execCommand).toHaveBeenCalledWith('insertText', false, '()');
         expect(editor.getValue()).toBe('a()b');
         expect(selectionOf(editor)).toEqual([3, 3]);
-        expect(inputCount).toBe(1);
+        expect(inputCount()).toBe(1);
     });
 
     it('reports no change when the textarea has no mutation primitive', () => {
