@@ -1,7 +1,5 @@
-const {
-    BracketPairController,
-    SimulatedEditorAdapter
-} = require('../public_html/bracket-pair-controller.js');
+const { BracketPairController } = require('../public_html/bracket-pair-controller.js');
+const { SimulatedEditorAdapter } = require('./support/simulated-editor-adapter.js');
 
 function keyEvent(key, modifiers = {}) {
     return {
@@ -19,11 +17,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent('('), editor)).toBe(true);
-        expect(editor.value).toBe('()');
-        expect(editor.selectionStart).toBe(1);
-        expect(editor.selectionEnd).toBe(1);
-        expect(editor.inputChangeCount).toBe(1);
-        expect(editor.undo()).toEqual({ value: '', selectionStart: 0, selectionEnd: 0 });
+        expect(editor.getValue()).toBe('()');
+        expect(editor.getSelectionStart()).toBe(1);
+        expect(editor.getSelectionEnd()).toBe(1);
     });
 
     it('wraps a selected range and leaves the selection inside the pair', () => {
@@ -31,9 +27,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent('['), editor)).toBe(true);
-        expect(editor.value).toBe('[abc]');
-        expect(editor.selectionStart).toBe(1);
-        expect(editor.selectionEnd).toBe(4);
+        expect(editor.getValue()).toBe('[abc]');
+        expect(editor.getSelectionStart()).toBe(1);
+        expect(editor.getSelectionEnd()).toBe(4);
     });
 
     it('moves over an existing matching closer without inserting a duplicate', () => {
@@ -41,9 +37,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent(')'), editor)).toBe(true);
-        expect(editor.value).toBe('(x)');
-        expect(editor.selectionStart).toBe(3);
-        expect(editor.selectionEnd).toBe(3);
+        expect(editor.getValue()).toBe('(x)');
+        expect(editor.getSelectionStart()).toBe(3);
+        expect(editor.getSelectionEnd()).toBe(3);
     });
 
     it('deletes an empty pair as one edit', () => {
@@ -51,10 +47,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(true);
-        expect(editor.value).toBe('');
-        expect(editor.selectionStart).toBe(0);
-        expect(editor.selectionEnd).toBe(0);
-        expect(editor.undo()).toEqual({ value: '{}', selectionStart: 1, selectionEnd: 1 });
+        expect(editor.getValue()).toBe('');
+        expect(editor.getSelectionStart()).toBe(0);
+        expect(editor.getSelectionEnd()).toBe(0);
     });
 
     it('leaves modifier shortcuts untouched', () => {
@@ -63,24 +58,10 @@ describe('BracketPairController', () => {
 
         for (const modifier of ['ctrlKey', 'metaKey', 'altKey']) {
             expect(controller.handleKeyDown(keyEvent('(', { [modifier]: true }), editor)).toBe(false);
-            expect(editor.value).toBe('x');
-            expect(editor.selectionStart).toBe(1);
-            expect(editor.selectionEnd).toBe(1);
+            expect(editor.getValue()).toBe('x');
+            expect(editor.getSelectionStart()).toBe(1);
+            expect(editor.getSelectionEnd()).toBe(1);
         }
-    });
-
-    it('uses range replacement when the undo-preserving command is unavailable', () => {
-        const editor = new SimulatedEditorAdapter('', 0, 0, {
-            supportsUndoPreservingCommand: false
-        });
-        const controller = new BracketPairController();
-
-        expect(controller.handleKeyDown(keyEvent('{'), editor)).toBe(true);
-        expect(editor.lastEditStrategy).toBe('range');
-        expect(editor.value).toBe('{}');
-        expect(editor.selectionStart).toBe(1);
-        expect(editor.selectionEnd).toBe(1);
-        expect(editor.inputChangeCount).toBe(1);
     });
 
     it('keeps a recognized edit handled when an adapter cannot mutate', () => {
@@ -108,9 +89,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent('('), editor)).toBe(true);
-        expect(editor.value).toBe('()');
-        expect(editor.selectionStart).toBe(1);
-        expect(editor.selectionEnd).toBe(1);
+        expect(editor.getValue()).toBe('()');
+        expect(editor.getSelectionStart()).toBe(1);
+        expect(editor.getSelectionEnd()).toBe(1);
     });
 
     it('does not consume a mismatched closing delimiter', () => {
@@ -118,9 +99,9 @@ describe('BracketPairController', () => {
         const controller = new BracketPairController();
 
         expect(controller.handleKeyDown(keyEvent(']'), editor)).toBe(false);
-        expect(editor.value).toBe('()');
-        expect(editor.selectionStart).toBe(1);
-        expect(editor.selectionEnd).toBe(1);
+        expect(editor.getValue()).toBe('()');
+        expect(editor.getSelectionStart()).toBe(1);
+        expect(editor.getSelectionEnd()).toBe(1);
     });
 
     it('does not consume Backspace for non-bracket characters at the end of input', () => {
@@ -129,9 +110,9 @@ describe('BracketPairController', () => {
         for (const char of ['x', '1', '.', ']', ')', '}']) {
             const editor = new SimulatedEditorAdapter(char, 1, 1);
             expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
-            expect(editor.value).toBe(char);
-            expect(editor.selectionStart).toBe(1);
-            expect(editor.selectionEnd).toBe(1);
+            expect(editor.getValue()).toBe(char);
+            expect(editor.getSelectionStart()).toBe(1);
+            expect(editor.getSelectionEnd()).toBe(1);
         }
     });
 
@@ -141,22 +122,20 @@ describe('BracketPairController', () => {
         for (const opener of ['(', '[', '{']) {
             const editor = new SimulatedEditorAdapter(opener, 1, 1);
             expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
-            expect(editor.value).toBe(opener);
-            expect(editor.selectionStart).toBe(1);
-            expect(editor.selectionEnd).toBe(1);
+            expect(editor.getValue()).toBe(opener);
+            expect(editor.getSelectionStart()).toBe(1);
+            expect(editor.getSelectionEnd()).toBe(1);
         }
     });
 
     it('does not consume Backspace for Unicode surrogate pair characters at the end of input', () => {
         const controller = new BracketPairController();
         const piSymbol = '\uD835\uDEE1';
-        const editor = new SimulatedEditorAdapter(piSymbol, 2, 2, {
-            supportsUndoPreservingCommand: false
-        });
+        const editor = new SimulatedEditorAdapter(piSymbol, 2, 2);
 
         expect(controller.handleKeyDown(keyEvent('Backspace'), editor)).toBe(false);
-        expect(editor.value).toBe(piSymbol);
-        expect(editor.selectionStart).toBe(2);
-        expect(editor.selectionEnd).toBe(2);
+        expect(editor.getValue()).toBe(piSymbol);
+        expect(editor.getSelectionStart()).toBe(2);
+        expect(editor.getSelectionEnd()).toBe(2);
     });
 });

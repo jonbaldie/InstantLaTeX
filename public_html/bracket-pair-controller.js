@@ -21,14 +21,19 @@
         '}': '{'
     });
 
-    function copySnapshot(snapshot) {
-        return {
-            value: snapshot.value,
-            selectionStart: snapshot.selectionStart,
-            selectionEnd: snapshot.selectionEnd
-        };
-    }
-
+    /**
+     * Editor adapter contract used by BracketPairController.handleKeyDown:
+     *
+     * - getValue() returns the editor text.
+     * - getSelectionStart() and getSelectionEnd() return the selection offsets.
+     * - setSelectionRange(start, end) moves the selection without editing.
+     * - replaceRange(start, end, text, command) replaces start..end with text,
+     *   leaves a collapsed caret after it and returns whether the value
+     *   changed. A changed value produces exactly one input notification,
+     *   whichever edit strategy made it; an unchanged value produces none.
+     *
+     * tests/editor-adapter-contract.test.js checks every adapter against it.
+     */
     class DomTextareaAdapter {
         constructor(textarea, ownerDocument) {
             if (!textarea) {
@@ -38,39 +43,18 @@
             this.textarea = textarea;
             this.document = ownerDocument || textarea.ownerDocument ||
                 (typeof document !== 'undefined' ? document : null);
-            this.lastEditStrategy = null;
-        }
-
-        get value() {
-            return this.textarea.value;
-        }
-
-        get selectionStart() {
-            return this.textarea.selectionStart;
-        }
-
-        set selectionStart(start) {
-            this.textarea.selectionStart = start;
-        }
-
-        get selectionEnd() {
-            return this.textarea.selectionEnd;
-        }
-
-        set selectionEnd(end) {
-            this.textarea.selectionEnd = end;
         }
 
         getValue() {
-            return this.value;
+            return this.textarea.value;
         }
 
         getSelectionStart() {
-            return this.selectionStart;
+            return this.textarea.selectionStart;
         }
 
         getSelectionEnd() {
-            return this.selectionEnd;
+            return this.textarea.selectionEnd;
         }
 
         setSelectionRange(start, end) {
@@ -79,13 +63,13 @@
 
         replaceRange(start, end, replacement, command = 'insertText') {
             this.setSelectionRange(start, end);
-            const previousValue = this.value;
+            const previousValue = this.getValue();
 
             try {
                 if (this.document && typeof this.document.execCommand === 'function') {
+                    // A successful native command dispatches its own input event.
                     this.document.execCommand(command, false, replacement);
-                    if (this.value !== previousValue) {
-                        this.lastEditStrategy = 'command';
+                    if (this.getValue() !== previousValue) {
                         return true;
                     }
                 }
@@ -98,12 +82,12 @@
             }
 
             this.textarea.setRangeText(replacement, start, end, 'end');
-            this.signalInputChange();
-            const changed = this.value !== previousValue;
-            if (changed) {
-                this.lastEditStrategy = 'range';
+            if (this.getValue() === previousValue) {
+                return false;
             }
-            return changed;
+
+            this.signalInputChange();
+            return true;
         }
 
         signalInputChange() {
@@ -118,150 +102,6 @@
                 new EventConstructor('input', { bubbles: true }) :
                 { type: 'input', bubbles: true };
             this.textarea.dispatchEvent(event);
-        }
-    }
-
-    class SimulatedEditorAdapter {
-        constructor(value = '', selectionStart = 0, selectionEnd = selectionStart, options = {}) {
-            if (selectionStart && typeof selectionStart === 'object') {
-                options = selectionStart;
-                selectionStart = 0;
-                selectionEnd = 0;
-            } else if (selectionEnd && typeof selectionEnd === 'object') {
-                options = selectionEnd;
-                selectionEnd = selectionStart;
-            }
-
-            this._value = String(value);
-            this._selectionStart = selectionStart;
-            this._selectionEnd = selectionEnd;
-            this.supportsUndoPreservingCommand = options.supportsUndoPreservingCommand !== false;
-            this.history = [this._snapshot()];
-            this.historyIndex = 0;
-            this.lastEditStrategy = null;
-            this.inputChangeCount = 0;
-        }
-
-        get value() {
-            return this._value;
-        }
-
-        set value(value) {
-            this._value = String(value);
-        }
-
-        get selectionStart() {
-            return this._selectionStart;
-        }
-
-        set selectionStart(start) {
-            this.setSelectionRange(start, this.selectionEnd);
-        }
-
-        get selectionEnd() {
-            return this._selectionEnd;
-        }
-
-        set selectionEnd(end) {
-            this.setSelectionRange(this.selectionStart, end);
-        }
-
-        getValue() {
-            return this.value;
-        }
-
-        getSelectionStart() {
-            return this.selectionStart;
-        }
-
-        getSelectionEnd() {
-            return this.selectionEnd;
-        }
-
-        setSelectionRange(start, end) {
-            this._selectionStart = start;
-            this._selectionEnd = end;
-            this.history[this.historyIndex] = this._snapshot();
-        }
-
-        replaceRange(start, end, replacement, command = 'insertText') {
-            if (this.supportsUndoPreservingCommand) {
-                this.lastEditStrategy = 'command';
-                const changed = this._applyRange(start, end, replacement);
-                if (changed) {
-                    // A successful native command dispatches the browser's input event.
-                    this.signalInputChange();
-                }
-                return changed;
-            }
-
-            return this.setRangeText(replacement, start, end, 'end', command);
-        }
-
-        setRangeText(replacement, start, end, selectionMode = 'end') {
-            const changed = this._applyRange(start, end, replacement);
-            this.inputChangeCount += 1;
-            if (changed) {
-                this.lastEditStrategy = 'range';
-            }
-            return changed;
-        }
-
-        signalInputChange() {
-            this.inputChangeCount += 1;
-        }
-
-        undo() {
-            if (this.historyIndex === 0) {
-                return null;
-            }
-
-            this.historyIndex -= 1;
-            const snapshot = copySnapshot(this.history[this.historyIndex]);
-            this._restore(snapshot);
-            return snapshot;
-        }
-
-        redo() {
-            if (this.historyIndex >= this.history.length - 1) {
-                return null;
-            }
-
-            this.historyIndex += 1;
-            const snapshot = copySnapshot(this.history[this.historyIndex]);
-            this._restore(snapshot);
-            return snapshot;
-        }
-
-        _applyRange(start, end, replacement) {
-            const previousValue = this.value;
-            this._value = previousValue.slice(0, start) + replacement + previousValue.slice(end);
-            const caret = start + replacement.length;
-            this._selectionStart = caret;
-            this._selectionEnd = caret;
-
-            if (this.value === previousValue) {
-                return false;
-            }
-
-            this.history = this.history.slice(0, this.historyIndex + 1);
-            this.history.push(this._snapshot());
-            this.historyIndex += 1;
-            return true;
-        }
-
-        _snapshot() {
-            return {
-                value: this.value,
-                selectionStart: this.selectionStart,
-                selectionEnd: this.selectionEnd
-            };
-        }
-
-        _restore(snapshot) {
-            this._value = snapshot.value;
-            this._selectionStart = snapshot.selectionStart;
-            this._selectionEnd = snapshot.selectionEnd;
         }
     }
 
@@ -332,7 +172,6 @@
     return {
         BracketPairController,
         DomTextareaAdapter,
-        SimulatedEditorAdapter,
         openingPairs,
         closingPairs
     };
