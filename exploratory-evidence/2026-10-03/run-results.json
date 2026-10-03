@@ -1,0 +1,172 @@
+{
+  "timestamp": "2026-10-03T01:19:35.144Z",
+  "commit": "2f5081e",
+  "journeys": {
+    "j1": {
+      "status": "completed",
+      "initialVal": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+      "valAfterClear": "",
+      "valAfterOpenParen": "()",
+      "selAfterOpenParen": [
+        1,
+        1
+      ],
+      "valAfterCloseParen": "()",
+      "selAfterCloseParen": [
+        2,
+        2
+      ],
+      "valAfterBackspacePair": "",
+      "valAfterWrapBrace": "{x + y}",
+      "selAfterWrapBrace": [
+        1,
+        6
+      ],
+      "valAfterWrapParen": "{(x + y)}",
+      "valAfterUndo1": "{x + y}",
+      "valAfterUndo2": "x + y",
+      "valAfterRedo1": "{x + y}",
+      "typedFormula": "\\frac{1}{2} + \\sqrt{x^2 + 1}",
+      "typedHasKatex": true,
+      "unicodeVal": "α + β + 𝛑",
+      "valAfterSurrogateBackspace": "α + β + "
+    },
+    "j2": {
+      "status": "completed",
+      "delimiterResults": [
+        {
+          "name": "inline-dollar",
+          "input": "$E = mc^2$",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "α+β+𝛑α + β + 𝛑α+β+𝛑"
+        },
+        {
+          "name": "display-dollar",
+          "input": "$$\\sum_{i=1}^n i = \\frac{n(n+1)}{2}$$",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "E=mc2E = mc^2E=mc2"
+        },
+        {
+          "name": "latex-inline",
+          "input": "\\(a^2 + b^2 = c^2\\)",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "∑i=1ni=n(n+1)2\\sum_{i=1}^n i = \\frac{n(n"
+        },
+        {
+          "name": "latex-display",
+          "input": "\\[\\int_0^1 x dx\\]",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "a2+b2=c2a^2 + b^2 = c^2a2+b2=c2"
+        },
+        {
+          "name": "escaped-dollar-inner",
+          "input": "$\\$100 + \\$200$",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "$100+$200\\$100 + \\$200$100+$200"
+        },
+        {
+          "name": "whitespace-delimiters",
+          "input": "  $$  x + y  $$  ",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "$100+$200\\$100 + \\$200$100+$200"
+        },
+        {
+          "name": "multiline-environment",
+          "input": "\\begin{matrix} 1 & 2 \\\\ 3 & 4 \\end{matrix}",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "1234\\begin{matrix} 1 & 2 \\\\ 3 & 4 \\end{m"
+        },
+        {
+          "name": "cases-environment",
+          "input": "f(x) = \\begin{cases} 0 & x < 0 \\\\ 1 & x \\ge 0 \\end{cases}",
+          "hasError": false,
+          "hasDisplay": true,
+          "renderedTextSnippet": "1234\\begin{matrix} 1 & 2 \\\\ 3 & 4 \\end{m"
+        }
+      ],
+      "invalidResults": [
+        {
+          "name": "unclosed-brace",
+          "hasError": true,
+          "hasDisplay": false,
+          "outputText": "\\frac{1}{2"
+        },
+        {
+          "name": "unknown-macro",
+          "hasError": false,
+          "hasDisplay": true,
+          "outputText": "\\foobarnonexistentcommand123\\foobarnonexistentcommand{123}\\f"
+        },
+        {
+          "name": "bare-backslash",
+          "hasError": false,
+          "hasDisplay": true,
+          "outputText": ""
+        },
+        {
+          "name": "backslash-space",
+          "hasError": false,
+          "hasDisplay": true,
+          "outputText": "\\"
+        },
+        {
+          "name": "percent-comment",
+          "hasError": false,
+          "hasDisplay": true,
+          "outputText": "% this is a comment"
+        },
+        {
+          "name": "extreme-nesting",
+          "hasError": false,
+          "hasDisplay": true,
+          "outputText": "1\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt{\\sqrt"
+        }
+      ],
+      "adFallbackPresent": true
+    },
+    "j3": {
+      "status": "completed",
+      "currentHash": "#%5Cint_0%5E1%20x%5E2%20dx%20%3D%20%5Cfrac%7B1%7D%7B3%7D",
+      "restoredVal": "\\int_0^1 x^2 dx = \\frac{1}{3}",
+      "specialCharMatched": true,
+      "page4FallbackVal": "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+      "valAfterHashChange": "\\lim_{x\\to 0} \\frac{\\sin x}{x} = 1",
+      "valAfterBack": "\\lim_{x\\to 0} \\frac{\\sin x}{x} = 1"
+    }
+  },
+  "findings": [],
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "warn",
+      "text": "LaTeX-incompatible input and strict mode is set to 'warn': Unrecognized Unicode character \"\ud835\" (55349) [unknownSymbol]"
+    },
+    {
+      "type": "warn",
+      "text": "No character metrics for '𝛑' in style 'Main-Regular' and mode 'text'"
+    },
+    {
+      "type": "warn",
+      "text": "LaTeX-incompatible input and strict mode is set to 'warn': % comment has no terminating newline; LaTeX would fail because of commenting the end of math mode (e.g. $) [commentAtEnd]"
+    }
+  ],
+  "pageErrors": []
+}
