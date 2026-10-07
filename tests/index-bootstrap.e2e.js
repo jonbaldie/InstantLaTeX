@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { withBrowserTest } = require('./support/browser-test-harness');
+const { BrowserEditorDriver } = require('./support/browser-editor-driver');
 
 const indexPath = path.resolve(__dirname, '..', 'public_html', 'index.html');
 const originalHtml = fs.readFileSync(indexPath, 'utf8');
@@ -23,12 +24,13 @@ async function loadPage(html) {
     return await withBrowserTest({ fixtures: { '/index.html': html } }, async ({ page, serverUrl }) => {
         const pageErrors = [];
         page.on('pageerror', error => pageErrors.push(error.message));
-        await page.goto(serverUrl, { waitUntil: 'domcontentloaded' });
+        const driver = new BrowserEditorDriver(page);
+        await driver.open(serverUrl);
 
         return {
             pageErrors,
-            outputText: await page.$eval('#math-output p', element => element.textContent),
-            hasRenderedMath: Boolean(await page.$('#math-output .katex-display'))
+            outputText: await driver.getPreviewText(),
+            hasRenderedMath: await driver.hasRenderedMath()
         };
     });
 }
