@@ -1,22 +1,12 @@
 const assert = require('node:assert/strict');
 const { withBrowserTest } = require('./support/browser-test-harness');
+const { BrowserEditorDriver } = require('./support/browser-editor-driver');
 
-const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-
-async function findAppFrame(page, port, embedHost = 'localhost', attempts = 40) {
-    for (let index = 0; index < attempts; index += 1) {
-        const frame = page.frames().find(candidate => candidate.url().includes(`${embedHost}:${port}/index.html`));
-        if (frame) {
-            try {
-                await frame.evaluate(() => Boolean(document.getElementById('maths-editor')));
-                return frame;
-            } catch (error) {
-                // Frame may still be initialising; retry.
-            }
-        }
-        await sleep(250);
-    }
-    throw new Error('Embedded app frame not found');
+async function findAppFrame(page, port, embedHost = 'localhost') {
+    return page.waitForFrame(
+        frame => frame.url().includes(`${embedHost}:${port}/index.html`),
+        { timeout: 10000 }
+    );
 }
 
 async function topLevelState(page) {
@@ -27,29 +17,6 @@ async function topLevelState(page) {
     }));
 }
 
-async function typeInEmbeddedEditor(page, frame, text, attempts = 5) {
-    for (let index = 0; index < attempts; index += 1) {
-        try {
-            await frame.evaluate(() => {
-                const editor = document.getElementById('maths-editor');
-                if (!editor) {
-                    throw new Error('editor not ready');
-                }
-                editor.focus();
-                editor.setSelectionRange(editor.value.length, editor.value.length);
-            });
-            break;
-        } catch (error) {
-            if (index === attempts - 1) {
-                throw error;
-            }
-            await sleep(500);
-        }
-    }
-    await page.keyboard.type(text, { delay: 30 });
-    await sleep(700);
-}
-
 async function runScenario(browser, { port, embedHost, hostUrl }) {
     const page = await browser.newPage();
     const embedUrl = `http://${embedHost}:${port}/index.html`;
@@ -57,18 +24,23 @@ async function runScenario(browser, { port, embedHost, hostUrl }) {
 
     try {
         await page.goto(scenarioHostUrl, { waitUntil: 'domcontentloaded' });
-        const frame = await findAppFrame(page, port);
+        const frame = await findAppFrame(page, port, embedHost);
+        const driver = new BrowserEditorDriver(frame);
+        await driver.waitForReady();
         const before = await topLevelState(page);
+        const initialValue = await driver.getValue();
+        await driver.setSelection(initialValue.length, initialValue.length);
 
-        await typeInEmbeddedEditor(page, frame, 'x');
+        await driver.type('x', { delay: 30 });
+        await driver.waitForSettled(`${initialValue}x`);
         const after = await topLevelState(page);
 
         let frameState = null;
         try {
-            frameState = await frame.evaluate(() => ({
-                url: location.href,
-                value: document.getElementById('maths-editor').value
-            }));
+            frameState = {
+                hash: await driver.getHash(),
+                value: await driver.getValue()
+            };
         } catch (error) {
             // Frame detached: the top-level navigation destroyed the embed context,
             // which is itself the symptom under test.
@@ -83,9 +55,9 @@ async function runScenario(browser, { port, embedHost, hostUrl }) {
         // At most, the embedded instance's own state changes: it keeps the formula
         // in its own fragment.
         if (frameState) {
-            assert.match(frameState.url, /#/, 'embedded instance should track its own URL fragment');
+            assert.match(frameState.hash, /#/, 'embedded instance should track its own URL fragment');
             assert.equal(
-                decodeURIComponent(frameState.url.split('#').pop() || ''),
+                decodeURIComponent(frameState.hash.split('#').pop() || ''),
                 frameState.value,
                 'embedded instance should carry the formula in its own fragment'
             );
@@ -124,9 +96,14 @@ async function run() {
         const sameOriginHostUrl = `${hostUrl}?embed=${encodeURIComponent(embedUrl)}`;
         await page.goto(sameOriginHostUrl, { waitUntil: 'domcontentloaded' });
         const frame = await findAppFrame(page, port, '127.0.0.1');
-        await typeInEmbeddedEditor(page, frame, 'x');
+        const driver = new BrowserEditorDriver(frame);
+        await driver.waitForReady();
+        const initialValue = await driver.getValue();
+        await driver.setSelection(initialValue.length, initialValue.length);
+        await driver.type('x', { delay: 30 });
+        await driver.waitForSettled(`${initialValue}x`);
         const state = await topLevelState(page);
-        const editorValue = await frame.evaluate(() => document.getElementById('maths-editor').value);
+        const editorValue = await driver.getValue();
         assert.equal(
             decodeURIComponent(state.url.split('#').pop() || ''),
             editorValue,

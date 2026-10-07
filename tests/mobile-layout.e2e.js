@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { withBrowserTest } = require('./support/browser-test-harness');
+const { BrowserEditorDriver } = require('./support/browser-editor-driver');
 
 const publicDirectory = path.join(__dirname, '..', 'public_html');
 const indexHtml = fs.readFileSync(path.join(publicDirectory, 'index.html'), 'utf8');
@@ -26,8 +27,9 @@ const deterministicPageHtml = deterministicIndexHtml.replace(
 
 async function measure(page, port, viewport) {
     await page.setViewport(viewport);
-    await page.goto(`http://127.0.0.1:${port}/index.html`, { waitUntil: 'load' });
-    await page.waitForSelector('#math-output .katex-display');
+    const driver = new BrowserEditorDriver(page);
+    await driver.open(`http://127.0.0.1:${port}/index.html`);
+    await driver.waitForPreview('rendered');
     await page.evaluate(height => {
         const slot = document.querySelector('.adsbygoogle');
         slot.style.cssText = `display:block; transition:none; outline:none; border:0; padding:0; margin-left:-20px; width:${innerWidth}px; z-index:30; height:${height}px;`;

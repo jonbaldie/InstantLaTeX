@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { withBrowserTest } = require('./support/browser-test-harness');
+const { BrowserEditorDriver } = require('./support/browser-editor-driver');
 
 const wideFormula = String.raw`\text{START}` + ' + a'.repeat(80) + String.raw` + \text{END}`;
 const narrowFormula = String.raw`\frac{-b\pm\sqrt{b^2-4ac}}{2a}`;
@@ -11,8 +12,9 @@ const viewports = [
 const overflowViewport = { name: 'desktop overflow', width: 1280, height: 800 };
 
 async function measure(page, port, formula) {
-    await page.goto(`http://127.0.0.1:${port}/index.html#${encodeURIComponent(formula)}`, { waitUntil: 'load' });
-    await page.waitForSelector('#math-output .katex-display');
+    const driver = new BrowserEditorDriver(page);
+    await driver.open(`http://127.0.0.1:${port}/index.html#${encodeURIComponent(formula)}`);
+    await driver.waitForSettled(formula, { preview: 'rendered', timeout: 15000 });
     return page.evaluate(() => {
         const container = document.getElementById('math-output');
         container.scrollLeft = 0;
@@ -52,8 +54,9 @@ async function scrollToEnd(page) {
 }
 
 async function measurePageOverflow(page, port, formula) {
-    await page.goto(`http://127.0.0.1:${port}/index.html#${encodeURIComponent(formula)}`, { waitUntil: 'load' });
-    await page.waitForSelector('#math-output .katex-display');
+    const driver = new BrowserEditorDriver(page);
+    await driver.open(`http://127.0.0.1:${port}/index.html#${encodeURIComponent(formula)}`);
+    await driver.waitForSettled(formula, { preview: 'rendered', timeout: 15000 });
     return page.evaluate(() => {
         const editor = document.getElementById('maths-editor').getBoundingClientRect();
         const header = document.querySelector('.ide-header').getBoundingClientRect();
