@@ -15,3 +15,16 @@ Other great LaTeX tools:
 (c) 2016 Jonathan Baldie.
 
 Thanks to KaTeX for their excellent, fast TeX rendering.
+
+## Embedding and share links
+
+A standalone editor stores its formula in its own URL fragment. An embedded editor
+uses the iframe URL fragment, independently of the host page's anchors or routing.
+For example, `<iframe src="/index.html#E%3Dmc%5E2"></iframe>` starts with
+`E=mc^2`. Editing updates the iframe URL with `replaceState`; navigating the
+iframe's fragment (including browser back and forward) restores its formula.
+
+Same-origin embeds previously read and wrote the host page's fragment. Embedders
+that relied on that behavior should put the encoded formula in the iframe `src`
+instead. Host-fragment synchronization is not provided; cross-origin embeds also
+use their own iframe URL.

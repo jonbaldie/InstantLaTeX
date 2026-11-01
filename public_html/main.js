@@ -25,43 +25,7 @@ if (typeof window !== 'undefined') {
         const mathsEditor = document.getElementById("maths-editor");
         const initialEditorValue = mathsEditor.value;
 
-        const getUrlTarget = () => {
-            try {
-                // Accessing `window.parent.location` does not throw cross-origin, but
-                // reading its members does. Only target the parent when its URL is
-                // genuinely readable (same origin); otherwise updating it would
-                // navigate the host page away (#20).
-                const parent = window.parent;
-                if (parent && typeof parent.location.hash === 'string') {
-                    return parent;
-                }
-            } catch (err) {
-                // Fall back to the current window when the parent is inaccessible.
-            }
-            return window;
-        };
-
-        const getEncodedHash = () => {
-            const urlTarget = getUrlTarget();
-
-            try {
-                if (urlTarget.location.hash) {
-                    return urlTarget.location.hash.substring(1);
-                }
-            } catch (err) {
-                // Fall back to the current window when the target hash is inaccessible.
-            }
-
-            try {
-                if (window.location.hash) {
-                    return window.location.hash.substring(1);
-                }
-            } catch (err) {
-                // Ignore inaccessible URL state.
-            }
-
-            return null;
-        };
+        const getEncodedHash = () => window.location.hash ? window.location.hash.substring(1) : null;
 
         let debounceTimer;
         const updateFromHash = () => {
@@ -91,23 +55,19 @@ if (typeof window !== 'undefined') {
                     // e.g. unpaired UTF-16 surrogates. The preview already updated.
                     return;
                 }
-                const urlTarget = getUrlTarget();
-
                 try {
-                    if (urlTarget.history && typeof urlTarget.history.replaceState === 'function') {
-                        urlTarget.history.replaceState(null, '', encodedHash);
+                    if (window.history && typeof window.history.replaceState === 'function') {
+                        window.history.replaceState(null, '', encodedHash);
                         return;
                     }
                 } catch (err) {
-                    // Fall back to replacing the URL when the History API is unavailable.
                 }
 
                 try {
-                    if (urlTarget.location && typeof urlTarget.location.replace === 'function') {
-                        urlTarget.location.replace(encodedHash);
+                    if (window.location && typeof window.location.replace === 'function') {
+                        window.location.replace(encodedHash);
                     }
                 } catch (err) {
-                    // Ignore inaccessible URL state.
                 }
             }, 300);
         };
@@ -132,16 +92,7 @@ if (typeof window !== 'undefined') {
             }
         });
 
-        const hashChangeTarget = getUrlTarget();
-        try {
-            if (hashChangeTarget && typeof hashChangeTarget.addEventListener === 'function') {
-                hashChangeTarget.addEventListener("hashchange", updateFromHash);
-            } else {
-                window.addEventListener("hashchange", updateFromHash);
-            }
-        } catch (err) {
-            window.addEventListener("hashchange", updateFromHash);
-        }
+        window.addEventListener("hashchange", updateFromHash);
 
         updateFromHash();
 
