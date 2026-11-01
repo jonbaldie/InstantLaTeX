@@ -100,7 +100,8 @@ function createBrowserHarness(initialHash = '', initialEditorValue = 'x') {
 
     global.window = global;
     global.document = document;
-    global.parent = { history, location, addEventListener: addWindowEventListener };
+    global.parent = new FakeEventTarget();
+    global.parent.location = { hash: '#host' };
     global.location = location;
     global.history = history;
     global.ga = jest.fn();
@@ -115,6 +116,7 @@ function createBrowserHarness(initialHash = '', initialEditorValue = 'x') {
         output,
         history,
         parent: global.parent,
+        location,
         dispatchHashchange(hash) {
             currentHash = normalizeHash(hash);
             for (const listener of windowListeners.get('hashchange') || []) {
@@ -226,7 +228,7 @@ describe('editor synchronization', () => {
 
     it('passes Control, Alt, and Meta opener chords through unchanged', () => {
         activeHarness = createBrowserHarness('', 'X');
-        const { mathsEditor, output, parent } = activeHarness;
+        const { mathsEditor, output, location } = activeHarness;
 
         for (const modifier of ['ctrlKey', 'altKey', 'metaKey']) {
             for (const opener of ['(', '[', '{']) {
@@ -240,7 +242,7 @@ describe('editor synchronization', () => {
                 expect(mathsEditor.selectionStart).toBe(1);
                 expect(mathsEditor.selectionEnd).toBe(1);
                 expect(output.textContent).toBe('$$X$$');
-                expect(parent.location.hash).toBe('');
+                expect(location.hash).toBe('');
             }
         }
     });
@@ -264,7 +266,7 @@ describe('editor synchronization', () => {
 
     it('keeps the corrected value, preview, and shareable hash synchronized', () => {
         activeHarness = createBrowserHarness('', '');
-        const { mathsEditor, output, parent } = activeHarness;
+        const { mathsEditor, output, location } = activeHarness;
 
         dispatchKeyDown(mathsEditor, '(');
         mathsEditor.value = '(x)';
@@ -275,7 +277,7 @@ describe('editor synchronization', () => {
 
         expect(mathsEditor.value).toBe('(x)');
         expect(output.textContent).toBe('$$\u0028x\u0029$$');
-        expect(parent.location.hash).toBe(`#${encodeURIComponent('(x)')}`);
+        expect(location.hash).toBe(`#${encodeURIComponent('(x)')}`);
     });
 
     it('updates the preview and URL hash for input events', () => {
@@ -286,11 +288,11 @@ describe('editor synchronization', () => {
 
         jest.advanceTimersByTime(299);
         expect(activeHarness.output.textContent).toBe('$$x$$');
-        expect(activeHarness.parent.location.hash).toBe('');
+        expect(activeHarness.location.hash).toBe('');
 
         jest.advanceTimersByTime(1);
         expect(activeHarness.output.textContent).toBe('$$x+y$$');
-        expect(activeHarness.parent.location.hash).toBe(`#${encodeURIComponent('x+y')}`);
+        expect(activeHarness.location.hash).toBe(`#${encodeURIComponent('x+y')}`);
     });
 
     it('replaces the URL hash without adding a history entry', () => {
@@ -332,7 +334,7 @@ describe('editor synchronization', () => {
         jest.advanceTimersByTime(300);
 
         expect(activeHarness.mathsEditor.value).toBe('x^2');
-        expect(activeHarness.parent.location.hash).toBe(`#${encodeURIComponent('x^2')}`);
+        expect(activeHarness.location.hash).toBe(`#${encodeURIComponent('x^2')}`);
     });
 
     it('keeps the default formula when the initial hash is bare', () => {
@@ -353,7 +355,20 @@ describe('editor synchronization', () => {
 
         expect(activeHarness.output.textContent).toBe('$$x\uD800y$$');
         expect(activeHarness.history.replaceState).not.toHaveBeenCalled();
-        expect(activeHarness.parent.location.hash).toBe('');
+        expect(activeHarness.location.hash).toBe('');
+    });
+
+    it('ignores parent navigation while an edit is pending', () => {
+        activeHarness = createBrowserHarness('frame');
+        activeHarness.mathsEditor.value = 'pending';
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        activeHarness.parent.location.hash = '#comments';
+        activeHarness.parent.dispatchEvent({ type: 'hashchange' });
+        jest.advanceTimersByTime(300);
+
+        expect(activeHarness.mathsEditor.value).toBe('pending');
+        expect(activeHarness.location.hash).toBe('#pending');
+        expect(activeHarness.parent.location.hash).toBe('#comments');
     });
 
     it('cancels a pending URL write when navigation restores a hash', () => {

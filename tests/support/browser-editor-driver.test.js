@@ -159,9 +159,9 @@ describe('BrowserEditorDriver', () => {
         expect(calls.waitForFunction[0].options).toEqual({ timeout: 2000 });
     });
 
-    test('uses the parent share URL for same-origin embedded editors', async () => {
-        const parent = createTarget({ hash: '#shared%20formula' });
-        const frame = createTarget({ value: 'shared formula', parentWindow: parent.window });
+    test('uses the iframe URL for same-origin embedded editors', async () => {
+        const parent = createTarget({ hash: '#host' });
+        const frame = createTarget({ value: 'shared formula', hash: '#shared%20formula', parentWindow: parent.window });
         const driver = new BrowserEditorDriver(frame.target);
 
         await driver.waitForReady();

@@ -35,33 +35,22 @@ async function runScenario(browser, { port, embedHost, hostUrl }) {
         await driver.waitForSettled(`${initialValue}x`);
         const after = await topLevelState(page);
 
-        let frameState = null;
-        try {
-            frameState = {
-                hash: await driver.getHash(),
-                value: await driver.getValue()
-            };
-        } catch (error) {
-            // Frame detached: the top-level navigation destroyed the embed context,
-            // which is itself the symptom under test.
-        }
+        const frameState = {
+            hash: await driver.getHash(),
+            value: await driver.getValue()
+        };
 
-        // The host page must never be navigated or mutated by the embedded editor.
         assert.equal(after.url, before.url, 'top-level page URL must stay on the host page');
         assert.equal(after.title, before.title, 'top-level page title must stay the host page title');
         assert.equal(after.historyLength, before.historyLength, 'top-level history must not gain entries');
         assert.ok(after.url.startsWith(`http://127.0.0.1:${port}/`), 'top-level page must remain on its own origin');
 
-        // At most, the embedded instance's own state changes: it keeps the formula
-        // in its own fragment.
-        if (frameState) {
-            assert.match(frameState.hash, /#/, 'embedded instance should track its own URL fragment');
-            assert.equal(
-                decodeURIComponent(frameState.hash.split('#').pop() || ''),
-                frameState.value,
-                'embedded instance should carry the formula in its own fragment'
-            );
-        }
+        assert.match(frameState.hash, /#/, 'embedded instance should track its own URL fragment');
+        assert.equal(
+            decodeURIComponent(frameState.hash.split('#').pop() || ''),
+            frameState.value,
+            'embedded instance should carry the formula in its own fragment'
+        );
 
         return after;
     } finally {
@@ -91,26 +80,8 @@ async function run() {
         await runScenario(browser, { port, embedHost: 'localhost', hostUrl });
         console.log('cross-origin embed: host page survived typing; app kept its own fragment');
 
-        // Same-origin embed: the shareable fragment on the host page must be preserved.
-        const embedUrl = `http://127.0.0.1:${port}/index.html`;
-        const sameOriginHostUrl = `${hostUrl}?embed=${encodeURIComponent(embedUrl)}`;
-        await page.goto(sameOriginHostUrl, { waitUntil: 'domcontentloaded' });
-        const frame = await findAppFrame(page, port, '127.0.0.1');
-        const driver = new BrowserEditorDriver(frame);
-        await driver.waitForReady();
-        const initialValue = await driver.getValue();
-        await driver.setSelection(initialValue.length, initialValue.length);
-        await driver.type('x', { delay: 30 });
-        await driver.waitForSettled(`${initialValue}x`);
-        const state = await topLevelState(page);
-        const editorValue = await driver.getValue();
-        assert.equal(
-            decodeURIComponent(state.url.split('#').pop() || ''),
-            editorValue,
-            'same-origin embed should still publish the formula to the host page fragment'
-        );
-        assert.ok(state.url.startsWith(`http://127.0.0.1:${port}/`));
-        console.log('same-origin embed: host page fragment still shareable');
+        await runScenario(browser, { port, embedHost: '127.0.0.1', hostUrl });
+        console.log('same-origin embed: host page survived typing; app kept its own fragment');
         await page.close();
     });
 }

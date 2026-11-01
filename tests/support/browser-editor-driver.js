@@ -77,18 +77,7 @@ class BrowserEditorDriver {
     }
 
     async getHash() {
-        return this.target.evaluate(() => {
-            let urlTarget = window;
-            try {
-                const parent = window.parent;
-                if (parent && parent !== window && typeof parent.location.hash === 'string') {
-                    urlTarget = parent;
-                }
-            } catch (error) {
-                // Cross-origin embeds keep their share hash in their own URL.
-            }
-            return urlTarget.location.hash;
-        });
+        return this.target.evaluate(() => window.location.hash);
     }
 
     async getDecodedHash() {
@@ -152,17 +141,7 @@ class BrowserEditorDriver {
             const editor = document.querySelector(editorSelector);
             if (!editor || editor.value !== expected) return false;
 
-            let urlTarget = window;
-            try {
-                const parent = window.parent;
-                if (parent && parent !== window && typeof parent.location.hash === 'string') {
-                    urlTarget = parent;
-                }
-            } catch (error) {
-                // Cross-origin embeds keep their share hash in their own URL.
-            }
-
-            const hash = urlTarget.location.hash;
+            const hash = window.location.hash;
             const decodedHash = decodeURIComponent(hash.startsWith('#') ? hash.slice(1) : hash);
             if (decodedHash !== expected) return false;
             if (!requestedPreview) return true;
