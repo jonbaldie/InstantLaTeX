@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0 - 2026-11-01
 
 - Embedded editors now read and update their own iframe URL fragment, so host
   anchors and hash routing do not overwrite formulas or pending edits. Same-origin
