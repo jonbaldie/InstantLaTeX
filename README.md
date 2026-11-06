@@ -16,6 +16,10 @@ Other great LaTeX tools:
 
 Thanks to KaTeX for their excellent, fast TeX rendering.
 
+## Exploratory testing
+
+The [2026-11-06 exploratory report](docs/exploratory-testing/2026-11-06-instantlatex.md) covers formula editing, share links, and embedded navigation.
+
 ## Embedding and share links
 
 A standalone editor stores its formula in its own URL fragment. An embedded editor

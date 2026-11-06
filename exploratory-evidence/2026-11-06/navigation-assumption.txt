@@ -1,0 +1,23 @@
+{"port":34293,"profileDirectory":"/tmp/instantlatex-e2e-iDpQyp","browserPid":3233653}
+{"label":"initial","value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hash":"","preview":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​","error":false}
+{"label":"typed","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"invalid","value":"x^2+1+^","hash":"#x%5E2%2B1%2B%5E","preview":"x^2+1+^","error":true}
+{"label":"corrected","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"reloaded share","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"malformed link","value":"x^2+1","hash":"#%ZZ","preview":"x2+1x^2+1x2+1","error":false}
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'x^2+1'
+- '\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}'
+
+    at /home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/explore-20261106.cjs:47:16
+    at async withBrowserTest (/home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/support/browser-test-harness.js:277:18)
+    at async run (/home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/explore-20261106.cjs:17:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'x^2+1',
+  expected: '\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

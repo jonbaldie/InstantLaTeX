@@ -1,0 +1,14 @@
+{"port":46331,"profileDirectory":"/tmp/instantlatex-e2e-icKZML","browserPid":3234319}
+{"label":"initial","value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hash":"","preview":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​","error":false}
+{"label":"typed","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"invalid","value":"x^2+1+^","hash":"#x%5E2%2B1%2B%5E","preview":"x^2+1+^","error":true}
+{"label":"corrected","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"reloaded share","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"malformed link","value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hash":"#%ZZ","preview":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​","error":false}
+{"label":"malformed recovery probe","value":"a+b","hash":"#a%2Bb","preview":"a+ba+ba+b","error":false}
+{"label":"malformed recovery","value":"a+b","hash":"#a%2Bb","preview":"a+ba+ba+b","error":false}
+{"label":"share reopened","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+{"label":"embedded initial","value":"E=mc^2","hash":"#E%3Dmc%5E2","preview":"E=mc2E=mc^2E=mc2","error":false}
+{"label":"embedded after host navigation","value":"E=mc^2+x","hash":"#E%3Dmc%5E2%2Bx","preview":"E=mc2+xE=mc^2+xE=mc2+x","error":false}
+{"label":"embedded reopened","value":"E=mc^2+x","hash":"#E%3Dmc%5E2%2Bx","preview":"E=mc2+xE=mc^2+xE=mc2+x","error":false}
+All exploratory assertions passed

@@ -1,0 +1,13 @@
+{"port":43083,"profileDirectory":"/tmp/instantlatex-e2e-MmpcKn","browserPid":3232801}
+{"label":"initial","value":"\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}","hash":"","preview":"−b±b2−4ac2a\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}2a−b±b2−4ac​​","error":false}
+{"label":"typed","value":"x^2+1","hash":"#x%5E2%2B1","preview":"x2+1x^2+1x2+1","error":false}
+TimeoutError: Waiting failed: 5000ms exceeded
+    at new WaitTask (file:///home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)
+    at IsolatedWorld.waitForFunction (file:///home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)
+    at CdpFrame.waitForFunction (file:///home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:585:43)
+    at CdpFrame.<anonymous> (file:///home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)
+    at CdpPage.waitForFunction (file:///home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1537:37)
+    at BrowserEditorDriver.waitForSettled (/home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/support/browser-editor-driver.js:140:27)
+    at /home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/explore-20261106.cjs:32:22
+    at async withBrowserTest (/home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/support/browser-test-harness.js:277:18)
+    at async run (/home/ubuntu/Code/pstack/.worktrees/instantlatex-explore-20261106/tests/explore-20261106.cjs:17:5)
