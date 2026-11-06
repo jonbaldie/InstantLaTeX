@@ -8,7 +8,7 @@ The pass used `origin/master` at `b51a989` (version 2.0.0), Node 22.22.1, and Ch
 
 1. **Edit and correct a formula.** The default quadratic rendered. Replacing it with `x^2+1` updated the preview and fragment. Adding `+^` produced visible parse-error feedback. Removing the invalid suffix restored the rendered preview and fragment. The successful run and replay both observed these results.
 2. **Open and recover a share link.** Reloading `#x%5E2%2B1` restored the formula and preview. A fresh document at `?malformed=1#%ZZ` retained the default formula, and editing it to `a+b` updated the preview and fragment. Reopening the original link restored `x^2+1`. The successful run and replay both observed these results.
-3. **Edit inside an embedded editor.** A same-origin host started the frame with `E=mc^2`. Typing `+x` changed the frame's preview and fragment. Navigating the host to `#comments` left the frame's formula intact. Reopening the frame URL restored `E=mc^2+x`. The successful run and replay both observed these results. The existing cross-origin and history regression scenarios also passed.
+3. **Edit inside an embedded editor.** A same-origin host started the frame with `E=mc^2`. Typing `+x` changed the frame's preview and fragment. Navigating the host to `#comments` left the frame's formula intact. A fresh frame document with the edited fragment restored `E=mc^2+x` in a follow-up replay. The first two runs navigated to the frame's existing URL and did not prove a fresh load. The existing cross-origin and history regression scenarios also passed.
 
 ## Findings and limitations
 
@@ -18,4 +18,4 @@ Two failed driver attempts were not product failures. An unsupported command did
 
 The browser was initially unavailable. The first Jest run had six harness failures and 70 passing tests; browser tests could not launch. After adding a worktree-local browser and its missing shared libraries, Jest passed all 76 tests and the editor, bootstrap, embed, layout, nested-overflow, and wide-formula browser suites passed. These regression suites supplement the journeys above; they are not a substitute for them.
 
-The pass did not exercise headed browsers, Safari, Firefox, real third-party embeds, IME input, live ads, or large-formula responsiveness. A bare fragment also remains outside the share-link journey because the existing [#3](https://github.com/jonbaldie/InstantLaTeX/issues/3) explicitly chose the default formula for that case.
+Preview checks used DOM text and rendered-element presence, not visual inspection. The pass did not exercise headed browsers, Safari, Firefox, real third-party embeds, IME input, live ads, or large-formula responsiveness. A bare fragment also remains outside the share-link journey because the existing [#3](https://github.com/jonbaldie/InstantLaTeX/issues/3) explicitly chose the default formula for that case.

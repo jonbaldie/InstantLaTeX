@@ -70,7 +70,7 @@ async function run() {
         assert.equal(state.value, 'E=mc^2+x');
         assert.ok(state.preview.includes('E=mc^2+x'));
         assert.equal(await page.evaluate(() => location.hash), '#comments');
-        await frame.goto(`${serverUrl}#E%3Dmc%5E2%2Bx`, { waitUntil: 'load' });
+        await frame.goto(`${serverUrl}?reopen=1#E%3Dmc%5E2%2Bx`, { waitUntil: 'load' });
         state = await snapshot(frame, 'embedded reopened');
         assert.equal(state.value, 'E=mc^2+x');
         console.log('All exploratory assertions passed');
