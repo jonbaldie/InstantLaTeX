@@ -34,5 +34,7 @@ jobs:
         run: npm run test:e2e:layout
       - name: Run nested overflow E2E tests
         run: npm run test:e2e:nested
+      - name: Run large formula E2E tests
+        run: npm run test:e2e:large
       - name: Run wide formula E2E tests
         run: npm run test:e2e:wide

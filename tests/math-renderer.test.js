@@ -53,7 +53,7 @@ const katexStringEngine = {
     }
 };
 
-const deepFormula = '{'.repeat(20000) + '}'.repeat(20000);
+const deepFormula = '{'.repeat(2000) + '}'.repeat(2000);
 
 describe('MathRenderer', () => {
     let node;
@@ -63,6 +63,19 @@ describe('MathRenderer', () => {
     });
 
     const katexRenderer = () => createMathRenderer({ getEngine: () => katexStringEngine });
+
+    it('limits raw formula length and resumes preview after shortening', () => {
+        const engine = { render: jest.fn((tex, output) => { output.textContent = `rendered ${tex.length}`; }) };
+        const renderer = createMathRenderer({ getEngine: () => engine });
+
+        expect(renderer.render('a'.repeat(10000), node).status).toBe('rendered');
+        expect(engine.render).toHaveBeenCalledTimes(1);
+        expect(renderer.render('😀'.repeat(5000) + 'a', node).status).toBe('input-too-long');
+        expect(node.textContent).toBe('Formula is too large to preview live. Reduce it to 10,000 UTF-16 code units or fewer.');
+        expect(engine.render).toHaveBeenCalledTimes(1);
+        expect(renderer.render('x', node).status).toBe('rendered');
+        expect(node.textContent).toBe('rendered 1');
+    });
 
     it('renders valid TeX as display math', () => {
         const result = katexRenderer().render('\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}', node);

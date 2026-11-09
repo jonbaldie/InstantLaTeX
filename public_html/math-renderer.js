@@ -143,6 +143,11 @@
     function createMathRenderer({ getEngine = getGlobalKatex } = {}) {
         return {
             render(rawTeX, node) {
+                if (typeof rawTeX === 'string' && rawTeX.length > 10000) {
+                    node.textContent = 'Formula is too large to preview live. Reduce it to 10,000 UTF-16 code units or fewer.';
+                    return { status: 'input-too-long', tex: rawTeX };
+                }
+
                 const tex = formatMath(rawTeX);
                 const engine = getEngine();
 
