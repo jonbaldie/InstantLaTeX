@@ -16,6 +16,13 @@ Other great LaTeX tools:
 
 Thanks to KaTeX for their excellent, fast TeX rendering.
 
+## Large formulas
+
+Live preview pauses for formulas longer than 10,000 UTF-16 code units. The
+editor and share link continue to update, and the preview resumes when the
+formula is shortened to the limit. This limit does not guarantee a rendering
+time for every formula.
+
 ## Exploratory testing
 
 The [2026-11-06 exploratory report](docs/exploratory-testing/2026-11-06-instantlatex.md) covers formula editing, share links, and embedded navigation.
