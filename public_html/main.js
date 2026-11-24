@@ -28,13 +28,6 @@ if (typeof window !== 'undefined') {
         const getEncodedHash = () => window.location.hash ? window.location.hash.substring(1) : null;
 
         let debounceTimer;
-        // Last editor value already rendered and hash-synchronised. The
-        // debounced handler is also scheduled by mouseup/keyup (e.g. an
-        // arrow-key release) that did not change the text; re-rendering or
-        // re-writing the hash for those is wasteful and, for large input,
-        // repeats the expensive work (#36). Skipping unchanged text still
-        // processes actual edits and external hash changes, which differ.
-        let lastProcessedValue;
         const updateFromHash = () => {
             clearTimeout(debounceTimer);
             try {
@@ -47,21 +40,13 @@ if (typeof window !== 'undefined') {
             } catch (err) {
                 // Ignore malformed URL fragments and leave the current editor value intact.
             }
-            if (mathsEditor.value === lastProcessedValue) {
-                return;
-            }
             UpdateMath(mathsEditor.value);
-            lastProcessedValue = mathsEditor.value;
         };
 
         const updateHandler = () => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
-                if (mathsEditor.value === lastProcessedValue) {
-                    return;
-                }
                 UpdateMath(mathsEditor.value);
-                lastProcessedValue = mathsEditor.value;
                 let encodedHash;
                 try {
                     encodedHash = `#${encodeURIComponent(mathsEditor.value)}`;
@@ -122,7 +107,6 @@ if (typeof window !== 'undefined') {
                 mathsEditor.selectionStart = mathsEditor.selectionEnd = start + str.length;
                 mathsEditor.focus();
                 UpdateMath(mathsEditor.value);
-                lastProcessedValue = mathsEditor.value;
             });
         });
 
@@ -167,8 +151,5 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        formatMath: mathRendererModule.formatMath,
-        MAX_LIVE_PREVIEW_LENGTH: mathRendererModule.MAX_LIVE_PREVIEW_LENGTH
-    };
+    module.exports = { formatMath: mathRendererModule.formatMath };
 }
