@@ -53,7 +53,10 @@ const katexStringEngine = {
     }
 };
 
-const deepFormula = '{'.repeat(20000) + '}'.repeat(20000);
+// Within the #36 live-preview limit (8000 chars) but deep enough to overflow
+// KaTeX, so the #35 containment path is still exercised. Inputs above the
+// limit are now handled as too-large before the engine is reached.
+const deepFormula = '{'.repeat(4000) + '}'.repeat(4000);
 
 describe('MathRenderer', () => {
     let node;
@@ -173,6 +176,60 @@ describe('MathRenderer', () => {
         engine = katexStringEngine;
         expect(renderer.render('x', node).status).toBe('rendered');
         expect(node.querySelector('.katex-display')).not.toBeNull();
+    });
+
+    describe('live-preview size limit (#36)', () => {
+        it('exports a 10000 code-unit limit', () => {
+            const { MAX_LIVE_PREVIEW_LENGTH } = require('../public_html/math-renderer.js');
+            expect(MAX_LIVE_PREVIEW_LENGTH).toBe(10000);
+        });
+
+        it('renders at the limit and skips the engine above it', () => {
+            const engine = { render: jest.fn() };
+            const renderer = createMathRenderer({ getEngine: () => engine });
+
+            expect(renderer.render('a'.repeat(10000), node).status).toBe('rendered');
+            expect(engine.render).toHaveBeenCalledTimes(1);
+
+            const result = renderer.render('a'.repeat(10001), node);
+
+            expect(result).toEqual({ status: 'too-large', tex: 'a'.repeat(10001) });
+            expect(engine.render).toHaveBeenCalledTimes(1);
+            expect(node.textContent).toBe(
+                'Formula too large to preview live (10001 characters, limit 10000). Shorten the formula to preview it.');
+            expect(node.querySelector('.katex-display')).toBeNull();
+        });
+
+        it('does not render the 98KB a+ reproduction and replaces stale output', () => {
+            const engine = { render: jest.fn() };
+            const renderer = createMathRenderer({ getEngine: () => engine });
+            node.innerHTML = '<span class="katex">stale</span>';
+            const tex = 'a+'.repeat(49000);
+
+            const result = renderer.render(tex, node);
+
+            expect(result.status).toBe('too-large');
+            expect(engine.render).not.toHaveBeenCalled();
+            expect(node.innerHTML).not.toContain('stale');
+            expect(node.textContent).toMatch(/too large to preview live \(98000 characters, limit 10000\)/);
+        });
+
+        it('shows too-large even when no engine is available', () => {
+            const result = createMathRenderer({ getEngine: () => null })
+                .render('a'.repeat(10001), node);
+
+            expect(result.status).toBe('too-large');
+            expect(node.textContent).toMatch(/too large/);
+        });
+
+        it('recovers to normal rendering when text falls below the limit', () => {
+            const renderer = katexRenderer();
+            expect(renderer.render('a'.repeat(10001), node).status).toBe('too-large');
+
+            expect(renderer.render('x^2', node).status).toBe('rendered');
+            expect(node.querySelector('.katex-display')).not.toBeNull();
+            expect(node.textContent).not.toMatch(/too large/);
+        });
     });
 
     it('uses the global katex engine by default', () => {
