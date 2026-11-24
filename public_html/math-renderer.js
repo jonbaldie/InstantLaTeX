@@ -125,6 +125,46 @@
         displayMode: true
     });
 
+    // Live-preview policy (#36): formatted TeX (after delimiter stripping)
+    // longer than 10,000 UTF-16 code units is not sent to KaTeX. The editor
+    // and URL-hash synchronisation keep working, the preview shows a
+    // too-large message instead of stale output, and rendering resumes
+    // automatically when the text falls back to the limit. This bounds
+    // the demonstrated large-input path; it is not a general CPU-time
+    // guarantee for all TeX (small but pathological TeX can still be
+    // expensive, and such crashes are contained separately).
+    const MAX_LIVE_PREVIEW_LENGTH = 10000;
+
+    function tooLargeMessage(tex) {
+        return 'Formula too large to preview live (' + tex.length +
+            ' characters, limit ' + MAX_LIVE_PREVIEW_LENGTH +
+            '). Shorten the formula to preview it.';
+    }
+
+    function setTooLargeClass(node, enabled) {
+        try {
+            if (node.classList && typeof node.classList.add === 'function' &&
+                typeof node.classList.remove === 'function') {
+                if (enabled) {
+                    node.classList.add('preview-too-large');
+                } else {
+                    node.classList.remove('preview-too-large');
+                }
+            } else if (typeof node.className === 'string') {
+                const parts = node.className.split(/\s+/).filter(Boolean);
+                const index = parts.indexOf('preview-too-large');
+                if (enabled && index === -1) {
+                    parts.push('preview-too-large');
+                } else if (!enabled && index !== -1) {
+                    parts.splice(index, 1);
+                }
+                node.className = parts.join(' ');
+            }
+        } catch (err) {
+            // Best-effort styling hook; the text message is the contract.
+        }
+    }
+
     function getGlobalKatex() {
         return typeof katex !== 'undefined' ? katex : null;
     }
@@ -144,6 +184,14 @@
         return {
             render(rawTeX, node) {
                 const tex = formatMath(rawTeX);
+
+                if (tex.length > MAX_LIVE_PREVIEW_LENGTH) {
+                    node.textContent = tooLargeMessage(tex);
+                    setTooLargeClass(node, true);
+                    return { status: 'too-large', tex };
+                }
+                setTooLargeClass(node, false);
+
                 const engine = getEngine();
 
                 if (!engine) {
@@ -174,6 +222,7 @@
 
     return {
         createMathRenderer,
-        formatMath
+        formatMath,
+        MAX_LIVE_PREVIEW_LENGTH
     };
 });
