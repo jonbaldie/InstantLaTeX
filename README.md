@@ -16,6 +16,16 @@ Other great LaTeX tools:
 
 Thanks to KaTeX for their excellent, fast TeX rendering.
 
+## Live preview limit
+
+Live preview renders formatted TeX up to 10,000 UTF-16 code units. Above that
+limit the editor and shareable URL keep synchronising, but KaTeX is not run:
+the preview shows "Formula too large to preview live (N characters, limit
+10,000). Shorten the formula to preview it." instead of stale output, and
+preview resumes automatically when the formula is shortened to the limit.
+This bounds the demonstrated large-input path; it is not a general CPU-time
+guarantee for all TeX.
+
 ## Exploratory testing
 
 The [2026-11-06 exploratory report](docs/exploratory-testing/2026-11-06-instantlatex.md) covers formula editing, share links, and embedded navigation.
