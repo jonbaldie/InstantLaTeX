@@ -371,6 +371,94 @@ describe('editor synchronization', () => {
         expect(activeHarness.parent.location.hash).toBe('#comments');
     });
 
+    it('shows a too-large preview for a pasted oversized formula while keeping editor and hash in sync', () => {
+        activeHarness = createBrowserHarness();
+        const oversized = 'a+'.repeat(6000); // 12000 chars, above 10000 limit
+
+        activeHarness.mathsEditor.value = oversized;
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+
+        expect(activeHarness.mathsEditor.value).toBe(oversized);
+        expect(activeHarness.output.textContent).toBe(
+            'Formula too large to preview live (12000 characters, limit 10000). Shorten the formula to preview it.');
+        expect(activeHarness.location.hash).toBe(`#${encodeURIComponent(oversized)}`);
+        // Still responsive: user can select-all and clear without a freeze/render.
+        activeHarness.mathsEditor.value = '';
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+
+        expect(activeHarness.output.textContent).toBe('$$$$');
+        expect(activeHarness.location.hash).toBe('#');
+    });
+
+    it('shows a too-large preview for a hash-loaded oversized formula and recovers below the limit', () => {
+        activeHarness = createBrowserHarness();
+        const oversized = 'a'.repeat(10001);
+
+        activeHarness.dispatchHashchange(encodeURIComponent(oversized));
+
+        expect(activeHarness.mathsEditor.value).toBe(oversized);
+        expect(activeHarness.output.textContent).toMatch(/too large to preview live \(10001 characters, limit 10000\)/);
+
+        // Recovery via a normal-sized hash, and via editing below the limit.
+        activeHarness.dispatchHashchange(encodeURIComponent('x^2'));
+        expect(activeHarness.mathsEditor.value).toBe('x^2');
+        expect(activeHarness.output.textContent).toBe('$$x^2$$');
+
+        activeHarness.mathsEditor.value = oversized;
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(activeHarness.output.textContent).toMatch(/too large/);
+
+        activeHarness.mathsEditor.value = 'y';
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(activeHarness.output.textContent).toBe('$$y$$');
+        expect(activeHarness.location.hash).toBe('#y');
+    });
+
+    it('renders at the limit and shows too-large just above it through the editor', () => {
+        activeHarness = createBrowserHarness();
+        const atLimit = 'a'.repeat(10000);
+
+        activeHarness.mathsEditor.value = atLimit;
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(activeHarness.output.textContent).toBe(`$$${atLimit}$$`);
+
+        activeHarness.mathsEditor.value = 'a'.repeat(10001);
+        activeHarness.mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(activeHarness.output.textContent).toMatch(/too large to preview live/);
+    });
+
+    it('suppresses redundant renders and hash writes when the text has not changed', () => {
+        activeHarness = createBrowserHarness();
+        const { mathsEditor, history } = activeHarness;
+
+        mathsEditor.value = 'x+y';
+        mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(history.replaceState).toHaveBeenCalledTimes(1);
+
+        // mouseup / keyup (e.g. arrow-key release) do not change the text.
+        for (const type of ['mouseup', 'keyup', 'input']) {
+            mathsEditor.dispatchEvent({ type });
+            jest.advanceTimersByTime(300);
+        }
+
+        expect(history.replaceState).toHaveBeenCalledTimes(1);
+        expect(activeHarness.output.textContent).toBe('$$x+y$$');
+
+        // An actual change is still processed.
+        mathsEditor.value = 'x+z';
+        mathsEditor.dispatchEvent({ type: 'input' });
+        jest.advanceTimersByTime(300);
+        expect(history.replaceState).toHaveBeenCalledTimes(2);
+        expect(activeHarness.output.textContent).toBe('$$x+z$$');
+    });
+
     it('cancels a pending URL write when navigation restores a hash', () => {
         activeHarness = createBrowserHarness();
 
